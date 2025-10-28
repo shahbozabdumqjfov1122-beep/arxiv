@@ -1,0 +1,26 @@
+
+# Go build files
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Compiled object files
+*.o
+*.a
+*.out
+
+# Dependency directories
+vendor/
+
+# IDE / editor cache
+.vscode/
+.idea/
+*.log
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
