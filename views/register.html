@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ro'yxatdan o'tish</title>
+    <link rel="stylesheet" href="../static/bootstrap-5.3.3-dist/css/bootstrap.min.css">
+    <style>
+        body {background: #f0f2f5; display:flex; justify-content:center; align-items:center; height:100vh;}
+        .card {padding:2rem; border-radius:1rem; box-shadow:0 5px 20px rgba(0,0,0,0.1); background:white; width:100%; max-width:400px;}
+        .form-control {margin-bottom:1rem;}
+        .btn-primary {width:100%;}
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2 class="text-center mb-4">Ro'yxatdan o'tish</h2>
+    {{if .Error}}<div class="alert alert-danger">{{.Error}}</div>{{end}}
+    <form method="post" action="/register">
+        <input type="text" name="name" placeholder="Ismingiz" class="form-control" required>
+        <input type="email" name="email" placeholder="Email" class="form-control" required>
+        <input type="password" name="password" placeholder="Parol" class="form-control" required>
+        <button type="submit" class="btn btn-primary">Yuborish</button>
+    </form>
+    <div class="text-center mt-3">
+        <a href="/login">Kirish sahifasiga o'tish</a>
+    </div>
+</div>
+</body>
+</html>

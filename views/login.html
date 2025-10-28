@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirish</title>
+    <link rel="stylesheet" href="../static/bootstrap-5.3.3-dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .help-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 14px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .help-link:hover {
+            background: rgba(255, 255, 255, 0.35);
+            color: #fff;
+        }
+        .card {
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            background-color: #fff;
+            width: 90%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+        .card h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+            font-size: 1.5rem;
+        }
+        .form-control {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            padding: 0.5rem 0.75rem;
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 0.6rem;
+            font-size: 1rem;
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Katta ekranlar uchun */
+        @media(min-width:768px){
+            .card {
+                width: 400px;
+                padding: 2.5rem;
+            }
+            .card h2 { font-size: 1.75rem; }
+            .form-control { font-size: 1rem; }
+            .btn-primary { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<a href="/help" class="help-link">🛈 Yordam bo‘limi</a>
+
+<div class="card">
+    <h2>Kirish</h2>
+    <form method="post" action="/login">
+        <!-- error -->
+        <div class="error-message">{{.Error}}</div>
+        <input type="email" name="email" placeholder="Email" class="form-control" required>
+        <input type="password" name="password" placeholder="Parol" class="form-control" required>
+        <button type="submit" class="btn btn-primary">Kirish</button>
+    </form>
+    <div class="register-link">
+        <a href="/register" class="mb-3">Ro'yxatdan o'tish</a><br>
+    </div>
+</div>
+
+</body>
+</html>

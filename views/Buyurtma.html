@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dastur Yaratamiz - Qora-Qizil</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #b5b5b5; /* ochroq qizil asosiy rang */
+      --secondary: #071629; /* fon uchun gradient bosh rangi */
+      --secondary-end: #0b1b2a; /* fon uchun gradient oxirgi rangi */
+      --text: #ffffff; /* oq matn */
+      --muted: #cccccc; /* engil kulrang matn */
+      --accent: #ff6b6b; /* accent rang */
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(180deg, var(--secondary), var(--secondary-end));
+      color: var(--text);
+    }
+
+    nav {
+      background: rgba(11, 27, 42, 0.95);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      border-bottom: 2px solid #0c1f3a;
+    }
+
+    nav h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    nav .logout {
+      background: linear-gradient(90deg, #2563eb, #06b6d4);
+      color: white;
+      text-decoration: none;
+      padding: 8px 15px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    nav .logout:hover {
+      background: linear-gradient(90deg, #2563eb, #06b6d4);
+    }
+
+    header {
+      text-align: center;
+      padding: 100px 20px 60px;
+      background: linear-gradient(180deg, #071629, #0b1b2a);
+      color: var(--text);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      margin: 0;
+      color: var(--primary);
+    }
+
+    header p {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 1.2rem;
+    }
+
+    main { max-width: 1200px; margin: -50px auto 20px; padding: 0 15px; }
+
+    .section-title {
+      text-align: center;
+      font-size: 2rem;
+      color: var(--primary);
+      margin: 40px 0 20px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: rgba(11, 27, 42, 0.85);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    }
+
+    .card h3 { margin-top: 0; color: var(--primary); }
+    .card p { color: var(--muted); }
+
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      margin-top: 15px;
+      background: var(--primary);
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+
+    .button:hover { background: #ff4f4f; }
+
+    .portfolio img {
+      width: 100%;
+      border-radius: 10px;
+      border: 2px solid var(--primary);
+    }
+
+    .cards.portfolio .card {
+      background: rgba(11, 27, 42, 0.85);
+      border-radius: 10px;
+      overflow: hidden;
+      height: 200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .cards.portfolio .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .contact {
+      background: rgba(11, 27, 42, 0.85);
+      padding: 30px 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+
+    .contact p {
+      margin: 10px 0;
+      color: var(--text);
+    }
+
+    .contact img { vertical-align: middle; margin-right: 8px; }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 40px;
+      background: #071629;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <h3>Buyurtma Kabineti</h3>
+  <a href="/help" class="logout">Chiqish</a>
+</nav>
+
+<header>
+  <h1>Xush Kelibsiz!</h1>
+  <p>Biz zamonaviy web, mobil dasturlar va botlar yaratamiz</p>
+</header>
+
+<main>
+  <h2 class="section-title">Xizmatlarimiz</h2>
+  <div class="cards">
+    <div class="card">
+      <h3>Web Dasturlar</h3>
+      <p>Sifatli va responsiv web saytlar, e-commerce va biznes tizimlari yaratamiz.</p>
+      <a href="#contact" class="button">Batafsil</a>
+    </div>
+    <div class="card">
+      <h3>Mobil Dasturlar</h3>
+      <p>Android va iOS ilovalar, zamonaviy UI/UX dizayni bilan.</p>
+      <a href="#contact" class="button">Batafsil</a>
+    </div>
+    <div class="card">
+      <h3>Telegram Botlar</h3>
+      <p>Botlar orqali avtomatlashtirilgan tizimlar va xizmatlar yaratamiz.</p>
+      <a href="#contact" class="button">Batafsil</a>
+    </div>
+  </div>
+
+  <h2 class="section-title">Bizda garatiya bor</h2>
+  <div class="cards portfolio">
+    <div class="card"><img src="../static/img/img.png" alt="Project 1"></div>
+    <div class="card"><img src="../static/img/img_1.png" alt="Project 2"></div>
+    <div class="card"><img src="../static/img/img_2.png" alt="Project 3"></div>
+    <div class="card"><img src="../static/img/img_3.png" alt="Project 4"></div>
+  </div>
+
+  <h2 class="section-title">Yangiliklar</h2>
+  <div class="cards">
+    <div class="card">
+      <h3>Blog Post 1</h3>
+      <p>So‘nggi yangiliklar, IT tendensiyalar va qiziqarli maqolalar.</p>
+    </div>
+    <div class="card">
+      <h3>Blog Post 2</h3>
+      <p>Bizning loyihalarimiz haqida ma’lumotlar va ishlash jarayonlari.</p>
+    </div>
+    <div class="card">
+      <h3>Blog Post 3</h3>
+      <p>Texnologiyalar va dasturlash bo‘yicha foydali maslahatlar.</p>
+    </div>
+  </div>
+
+  <h2 class="section-title">Aloqa</h2>
+  <div class="contact" id="contact">
+    <p>
+      <a href="https://t.me/TM_ESPORTS" target="_blank" style="text-decoration:none; color:var(--primary); font-weight:bold; display:inline-flex; align-items:center; gap:8px; font-size:16px;">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram" width="24" height="24">
+        @TM_ESPORTS
+      </a>
+    </p>
+    <p>
+      <a href="https://www.instagram.com/anmelaruzb_bot" target="_blank" style="text-decoration:none; color:var(--primary); font-weight:bold; display:inline-flex; align-items:center; gap:8px; font-size:16px;">
+        <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" width="24" height="24">
+        @anmelaruzb_bot
+      </a>
+    </p>
+    <p>
+      <span style="display:inline-flex; align-items:center; gap:8px; font-size:16px; color:var(--muted);">
+        <img src="https://cdn-icons-png.flaticon.com/512/724/724664.png" alt="Telefon" width="24" height="24">
+        +998 77 407 82 85
+      </span>
+    </p>
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 Dastur Yaratamiz. Barcha huquqlar himoyalangan.
+</footer>
+
+</body>
+</html>

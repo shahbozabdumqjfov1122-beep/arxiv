@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>HabarSurat — Sizning Habaringiz va Suratlaringiz Arxivlash Xizmati</title>
+    <style>
+        :root {
+            --bg: #0f1724;
+            --card: #0b1220;
+            --accent: #3b82f6;
+            --muted: #9aa9c7;
+            --glass: rgba(255, 255, 255, 0.03);
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            background: linear-gradient(180deg, #071025 0%, #071b2f 60%), url('../static') center/cover no-repeat;
+            color: #e6eef8;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.5;
+        }
+
+        header {
+            padding: 42px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            background: linear-gradient(90deg, rgba(11, 18, 32, 0.6), rgba(6, 12, 22, 0.35));
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(6px);
+            z-index: 10;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #60a5fa, #0ea5a5);
+            box-shadow: 0 6px 20px rgba(14, 165, 165, 0.12), inset 0 -6px 20px rgba(0, 0, 0, 0.2);
+            font-weight: 800;
+            color: #031124;
+            font-size: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin: 0
+        }
+
+        p.lead {
+            color: var(--muted);
+            margin: 6px 0 0 0;
+            font-size: 14px
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 36px auto;
+            padding: 0 20px 80px;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 28px;
+            align-items: stretch;
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .feature {
+            padding: 12px;
+            background: var(--glass);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .feature h4 {
+            margin: 0 0 6px 0;
+            font-size: 15px
+        }
+
+        .feature p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .cta {
+            margin-top: 18px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #2563eb, #06b6d4);
+            color: white;
+            box-shadow: 0 8px 30px rgba(37, 99, 235, 0.16);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        /* Right column - preview */
+        .preview {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .phone {
+            width: 100%;
+            height: 620px;
+            border-radius: 18px;
+            overflow: hidden;
+            background: linear-gradient(180deg, #071629, #0b1b2a);
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .phone .topbar {
+            height: 52px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), transparent);
+        }
+
+        .phone .screen {
+            padding: 14px;
+            overflow: auto;
+            flex: 1;
+        }
+
+        .note {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .note h5 {
+            margin: 0 0 6px 0;
+            font-size: 14px
+        }
+
+        .note p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        /* Sections */
+        section {
+            margin-top: 28px;
+            display: grid;
+            gap: 18px;
+            grid-template-columns: 1fr;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 18px;
+            align-items: start;
+        }
+
+        .specs {
+            display: grid;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .spec {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 12px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.01);
+        }
+
+        .spec strong {
+            display: block;
+            font-size: 14px
+        }
+
+        .spec span {
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        footer {
+            margin-top: 56px;
+            padding: 28px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* responsive */
+        @media (max-width: 1000px) {
+            .hero {
+                grid-template-columns: 1fr
+            }
+
+            .two-col {
+                grid-template-columns: 1fr
+            }
+
+            .phone {
+                height: 420px
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="brand">
+        <div class="logo">AX</div>
+        <div>
+            <h1>Arxiv</h1>
+            <p class="lead">Yodingizda qolishi kerak bo‘lgan habarlari va suratlaringizni xavfsiz saqlash xizmati</p>
+        </div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:center;">
+        <a class="btn btn-ghost" href="#features">Xususiyatlar</a>
+        <a class="btn btn-ghost" href="#faq">FAQ</a>
+        <a class="btn btn-primary" href="/login">ORTGA</a>
+    </div>
+</header>
+
+<main class="container">
+    <div class="hero">
+        <div class="card">
+            <h2 style="margin:0 0 6px 0">Soddaligi — bosh ustunimiz</h2>
+            <p style="color:var(--muted);margin:0 0 12px 0">
+                HabarSurat siz uchun muhim bo‘lgan qisqa habarlari, ogohlantirishlar (habar), va ularning biriktirilgan
+                suratlarini oddiy, tez va ishonchli saqlaydi.
+                Mobil yoki kompyuterdan yuboring — ilova avtomatik ravishda arxivlaydi, siz esa kerak paytda qidirib
+                olasiz.
+            </p>
+
+            <div class="features" id="features">
+                <div class="feature">
+                    <h4>Tez saqlash</h4>
+                    <p>Har qanday habar yoki matnni bir zumda saqlang — offline rejimda ham navbatga qo‘yib, internet
+                        paydo bo‘lganda yuboradi.</p>
+                </div>
+                <div class="feature">
+                    <h4>Rasm va media</h4>
+                    <p>Habar bilan birga surat yoki skrinshot qo‘shing. Media fayllar avtomatik ravishda
+                        optimallashtiriladi va xavfsiz saqlanadi.</p>
+                </div>
+                <div class="feature">
+                    <h4>Qidiruv va teglar</h4>
+                    <p>Matn ichida tez qidiruv, teg qo‘yish va filtrlar yordamida kerakli voqeani darhol toping.</p>
+                </div>
+                <div class="feature">
+                    <h4>Zaxira & eksport</h4>
+                    <p>Butun arxivni eksport qiling — JSON yoki ZIP formatida. Oson konversiya va tiklash
+                        imkoniyati.</p>
+                </div>
+            </div>
+
+            <div class="cta">
+                <a class="btn btn-primary" href="#download">ILOVANI OLIB KO‘RISH</a>
+                <a class="btn btn-ghost" href="#contact">Biz bilan bog‘lanish</a>
+            </div>
+
+            <section>
+                <h3 style="margin:0">Nega HabarSurat?</h3>
+                <p style="color:var(--muted); margin:6px 0 0 0">
+                    Ko‘pchilik odamlar muhim xabar va suratlarini vaqt o‘tishi bilan yo‘qotadi — telefonni almashtirish,
+                    chatlar tozalanganda yoki xotira to‘lganida.
+                    HabarSurat bu muammoni hal qiladi: siz o‘zingiz uchun muhim bo‘lgan har qanday habarni mustaqil
+                    arxivda saqlaysiz.
+                </p>
+
+                <div style="margin-top:10px;" class="specs">
+                    <div class="spec">
+                        <div><strong>Saqlash turi</strong><span>Matn, rasm, va meta ma'lumotlar</span></div>
+                        <div>●</div>
+                    </div>
+                    <div class="spec">
+                        <div><strong>Qidiruv</strong><span>So‘z bo‘yicha, teglar va sana filtr</span></div>
+                        <div>●</div>
+                    </div>
+                    <div class="spec">
+                        <div><strong>Zaxira</strong><span>Avtomatik yoki qo‘lda eksport</span></div>
+                        <div>●</div>
+                    </div>
+                    <div class="spec">
+                        <div><strong>Himoya</strong><span>Shifrlash (transport va ilovada saqlash)</span></div>
+                        <div>●</div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h3 style="margin:0">Foydalanish holatlari (real misollar)</h3>
+                <p style="color:var(--muted); margin:6px 0 0 0">
+                    • Ishdagi muhim ogohlantirishlar va tasklar tarixini saqlash;<br>
+                    • Hujjat yoki faktlarni tasdiqlovchi skrinshotlar arxivi;<br>
+                    • Shaxsiy eslatmalar va qabul qilingan qarorlar tarixini yuritish;<br>
+                    • Doimiy hujjatlarni yoki mijoz bilan bo‘lgan suhbatni zaxiralash.
+                </p>
+
+                <h4 style="margin-top:12px">Texnik jihatlari — qisqacha</h4>
+                <p style="color:var(--muted); margin:6px 0 0 0">
+                    Ilova backendida siz tanlagan texnologiyalar (masalan, Go + GORM + PostgreSQL yoki Node.js +
+                    MongoDB) ishlashi mumkin.
+                    Media uchun avtomatik siqish, CDN orqali so‘rov yetkazib berish, va REST yoki GraphQL API-lar orqali
+                    integratsiya — barchasi qo‘llab-quvvatlanadi.
+                </p>
+            </section>
+
+        </div>
+
+        <div class="preview card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <strong>Ilova namoyishi</strong>
+                <small style="color:var(--muted)">Live preview</small>
+            </div>
+
+            <div class="phone" aria-hidden="true">
+                <div class="topbar">
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <div style="width:10px;height:10px;border-radius:50%;background:#34d399;box-shadow:0 0 10px #34d399;"></div>
+                        <div style="font-size:13px;color:var(--muted)">HabarSurat</div>
+                    </div>
+                    <div style="color:var(--muted);font-size:13px">14:32</div>
+                </div>
+                <div class="screen">
+                    <div class="note">
+                        <h5>⬤ BIZ DOIM SMS LARNI XAVSIZ SAQLAYMIZ: </h5>
+                        <p>2025-10-27 — kuni ishga tushurildi</p>
+                    </div>
+
+                    <div class="note">
+                        <h5>⬤ Maktub — Loyihaga oid</h5>
+                        <p>2025-10-24 — “Design feedback” skrinshot qo‘shildi. (2 rasm)</p>
+                    </div>
+
+                    <div class="note">
+                        <h5>⬤ Xotira: Tadbirkorlik fikri</h5>
+                        <p>Qisqacha: prototip, uchrashuv va keyingi qadamlar.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:flex; gap:8px; margin-top:8px; justify-content:space-between; align-items:center;">
+                <div style="color:var(--muted);font-size:13px">Skachat: 12,345</div>
+                <div style="display:flex; gap:8px;">
+                    <a class="btn btn-ghost" href="#download">APK</a>
+                    <a class="btn btn-primary" href="#download">Play / App Store</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Big descriptive section -->
+    <section class="card">
+        <h3 style="margin:0 0 8px 0">Ilovaning batafsil tavsifi</h3>
+        <p style="color:var(--muted); margin:0 0 12px 0">
+            HabarSurat — bu oddiy arxiv emas; bu — sizning xabaringiz, suratlaringiz va hodisalar tarixiga egalik qilish
+            imkonini beruvchi ishonchli vosita.
+            Ilova quyidagilarni ta'minlaydi:
+        </p>
+
+        <ul style="color:var(--muted); margin:12px 0 0 20px">
+            <li><strong>Tez saqlash va avtomatik tashkil etish:</strong> har bir habarga sana, teg va kategoriya
+                avtomatik biriktirilishi mumkin.
+            </li>
+            <li><strong>Multimedia qo‘llab-quvvatlashi:</strong> suratlar, fayllar va skrinshotlar bilan birga saqlash.
+            </li>
+            <li><strong>Offline rejim:</strong> internet yo‘q paytda ham yozuvlar lokal saqlanadi va keyin serverga
+                yuboriladi.
+            </li>
+            <li><strong>Qidiruv tarmog‘i:</strong> OCR yordamida rasm ichidagi matnni ham qidirish mumkin.</li>
+            <li><strong>Zaxira va eksport:</strong> to‘liq arxivni eksport/import qilish, shuningdek ma'lum davr yoki
+                teg bo‘yicha filtrlangan eksport.
+            </li>
+            <li><strong>Integratsiya:</strong> Telegram, Email yoki boshqa xabar xizmatlari bilan avtomatik
+                arxivlashtirish (webhook/connector yordamida).
+            </li>
+            <li><strong>Maxfiylik va xavfsizlik:</strong> transport qatlamida TLS/HTTPS va server tomonida shifrlash
+                (encrypt at rest) opsiyalari.
+            </li>
+        </ul>
+
+        <h4 style="margin-top:12px">Foydalanuvchi tajribasi</h4>
+        <p style="color:var(--muted); margin:6px 0 0 0">
+            Ilovani ochish, yangi habar yozish yoki xabarni forward qilish — bularning barchasi oddiy va intuitiv. Matn
+            maydoniga yozing, rasm tugmasini bossangiz rasm qo‘shiladi, «Saqlash» bosilganda esa arxivga tushadi.
+            Har bir yozuvda <em>vaqt</em>, <em>manba</em> va <em>teg</em> ko‘rinadi — keyinchalik siz aniq va tez
+            topasiz.
+        </p>
+
+        <h4 style="margin-top:12px">Server va texnologiya tavsifi (takliflar)</h4>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:8px">
+            <div style="background:var(--glass); padding:10px; border-radius:8px"><strong>Backend</strong>
+                <div style="color:var(--muted);font-size:13px">Go / Golan</div>
+            </div>
+            <div style="background:var(--glass); padding:10px; border-radius:8px"><strong>DB</strong>
+                <div style="color:var(--muted);font-size:13px">PostgreSQL / MongoDB</div>
+            </div>
+            <div style="background:var(--glass); padding:10px; border-radius:8px"><strong>Media</strong>
+                <div style="color:var(--muted);font-size:13px">S3 / MinIO + CDN</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ and contact -->
+    <div class="two-col">
+        <div class="card">
+            <h3 style="margin:0 0 6px 0" id="faq">Tez-tez so‘raladigan savollar (FAQ)</h3>
+
+            <h4 style="margin-top:12px">1. Ma'lumotlarim xavfsizmi?</h4>
+            <p style="color:var(--muted); margin:6px 0 0 0">Ha. Transport qatlamida HTTPS ishlatiladi va serverda
+                saqlanayotgan muhim maydonlar shifrlanadi (encrypt at rest). Batafsil konfiguratsiya siz tanlagan
+                hostingga bog‘liq.</p>
+
+            <h4 style="margin-top:12px">2. Nechta rasm qo‘sha olaman?</h4>
+            <p style="color:var(--muted); margin:6px 0 0 0">Standart holda har bir yozuvga bir nechta rasm qo‘shish
+                mumkin. Server qismida cheklovlar (maks fayl hajmi va umumiy saqlash miqdori) sozlanadi.</p>
+
+            <h4 style="margin-top:12px">3. Ilovani qanday integratsiya qilish mumkin?</h4>
+            <p style="color:var(--muted); margin:6px 0 0 0">Webhook, API token va Telegram bot orqali avtomatik
+                forwarding qilish mumkin. Biz sizga misol konfiguratsiyasini ham taqdim eta olamiz.</p>
+
+            <h4 style="margin-top:12px">4. Arxivni qanday eksport qilaman?</h4>
+            <p style="color:var(--muted); margin:6px 0 0 0">Sozlamalardan "Eksport" tugmasini bosib CSV/JSON yoki ZIP
+                (media bilan) formatida yuklab olishingiz mumkin.</p>
+
+            <h4 style="margin-top:20px">5. adminlar bilan qanday bog'lanaman?</h4>
+            <p style="color:var(--muted); margin:6px 0 0 0">
+                <a href="https://t.me/TM_ESPORTS" target="_blank"
+                   style="text-decoration:none; color:#0088cc; font-weight:bold;">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png"
+                         alt="Telegram" width="20" height="20"
+                         style="vertical-align:middle; margin-right:6px;">
+                    @TM_ESPORTS
+                </a>
+                <br>
+                <a href="https://www.instagram.com/anmelaruzb_bot" target="_blank"
+                   style="text-decoration:none; color:#E1306C; font-weight:bold;">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
+                         alt="Instagram" width="20" height="20"
+                         style="vertical-align:middle; margin-right:6px;">
+                    @anmelaruzb_bot
+                </a>
+            </p>
+        </div>
+
+        <aside class="card" id="contact">
+            <h3 style="margin:0 0 6px 0">Bog‘lanish</h3>
+            <p style="color:var(--muted); margin:0 0 12px 0">Agar xohlasangiz, men bu ilovaning backend kodini tayyorlab
+                beraman (Go/Beego yoki Node/Express misoli), yoki mavjud loyihangizni AJAX bilan real vaqt CRUD qilishga
+                moslab tuzataman.</p>
+
+            <div style="margin-top:8px;">
+                <div>
+                    <br>
+                    Telegram
+                    <br>
+                    <p>
+                        <a href="https://t.me/TM_ESPORTS" target="_blank" style="text-decoration:none; color:#0088cc; font-weight:bold;">
+                            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png"
+                                 alt="Telegram" width="20" height="20"
+                                 style="vertical-align:middle; margin-right:6px;">
+                            @TM_ESPORTS
+                        </a>
+                        <br>
+                        <br>
+                        Instagram <br>
+                        <br>
+                        <a href="https://www.instagram.com/anmelaruzb_bot" target="_blank" style="text-decoration:none; color:#E1306C; font-weight:bold;">
+                            <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"
+                                 alt="Instagram" width="20" height="20"
+                                 style="vertical-align:middle; margin-right:6px;">
+                            @anmelaruzb_bot
+                        </a>
+                    </p>
+                </div>
+                <div style="margin-bottom:8px"><strong>Telefon</strong>
+                    <div style="color:var(--muted);font-size:13px">+998 77 407 82 85</div>
+                </div>
+            </div>
+
+            <div style="margin-top:12px">
+                <a class="btn btn-primary" href="#download">Ilovani adminlari</a>
+            </div>
+        </aside>
+    </div>
+
+    <section class="card" id="download">
+        <h3 style="margin:0 0 8px 0">Yuklab olish va o‘rnatish</h3>
+        <p style="color:var(--muted); margin:0 0 12px 0">
+            Ilova hozircha birinchi beta bosqichida. Oson o‘rnatish uchun Android APK yoki Web-versiya taklif etiladi.
+            Agar komanda bilan ishlamoqchi bo‘lsangiz — biz sizga CI/CD, Docker container va hosting tayyorlab beramiz.
+        </p>
+
+        <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+            <a class="btn btn-primary" href="/Buyurtma" style="min-width:160px">Buyurtma berish</a>
+            <a class="btn btn-ghost" href="#" style="min-width:160px">Web demo</a>
+            <a class="btn btn-ghost" href="#" style="min-width:160px">Open-source repo</a>
+        </div>
+    </section>
+
+    <footer>
+        © 2025 HabarSurat — Barcha huquqlar himoyalangan. Agar ilova bo‘yicha qo‘shimcha g‘oya yoki taklif bo‘lsa,
+        albatta yozing — biz tez orada javob qaytaramiz.
+    </footer>
+</main>
+</body>
+</html>
