@@ -8,6 +8,6 @@ import (
 
 func main() {
 	database.InitDB()
-	beego.Run()
+	beego.Run("0.0.0.0:8083")
 
 }
