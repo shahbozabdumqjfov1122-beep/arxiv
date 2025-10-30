@@ -3,10 +3,7 @@ package controllers
 import (
 	"arxiv/database"
 	"arxiv/models"
-	"net/http"
-
 	beego "github.com/beego/beego/v2/server/web"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type RegisterController struct {
@@ -30,18 +27,11 @@ func (c *RegisterController) Post() {
 	email := c.GetString("email")
 	password := c.GetString("password")
 
-	// passwordni hash qilish
-	hashedPass, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		c.Ctx.Output.SetStatus(http.StatusInternalServerError)
-		c.Ctx.WriteString("Parolni saqlashda xatolik")
-		return
-	}
-
+	// ✅ Parolni hash qilmasdan saqlash
 	user := models.User{
 		Name:     name,
 		Email:    email,
-		Password: string(hashedPass),
+		Password: password, // to'g'ridan-to'g'ri saqlanadi
 	}
 
 	// GORM orqali saqlash

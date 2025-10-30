@@ -42,7 +42,7 @@ func (c *DashboardController) Post() {
 
 	body := c.GetString("about")
 
-	// 📸 Faylni olish (_ bilan, file ishlatilmaydi)
+	// 📸 Faylni olish
 	_, header, err := c.GetFile("image")
 	var imagePath string
 	if err == nil && header != nil {
@@ -55,12 +55,9 @@ func (c *DashboardController) Post() {
 		}
 	}
 
-	// Matn ham yo‘q, rasm ham yo‘q bo‘lsa, xato
+	// Matn ham yo‘q, rasm ham yo‘q bo‘lsa
 	if body == "" && imagePath == "" {
-		c.Data["json"] = map[string]interface{}{
-			"error": "Hech qanday ma'lumot yuborilmadi",
-		}
-		c.ServeJSON()
+		c.Ctx.WriteString("Hech qanday ma'lumot yuborilmadi")
 		return
 	}
 
@@ -71,18 +68,10 @@ func (c *DashboardController) Post() {
 		ImagePath: imagePath,
 	}
 	if err := database.DB.Create(&note).Error; err != nil {
-		c.Data["json"] = map[string]interface{}{
-			"error": "Bazaga yozishda xatolik: " + err.Error(),
-		}
-		c.ServeJSON()
+		c.Ctx.WriteString("Bazaga yozishda xatolik: " + err.Error())
 		return
 	}
 
-	// ✅ JSON javob
-	c.Data["json"] = map[string]interface{}{
-		"ID":        note.ID,
-		"Body":      note.Body,
-		"ImagePath": note.ImagePath,
-	}
-	c.ServeJSON()
+	// ✅ Sahifani qayta yuklash
+	c.Redirect("/dashboard", 302)
 }

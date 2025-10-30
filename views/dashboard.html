@@ -179,10 +179,13 @@
   <div class="card">
     <h4>Rasm Qo‘shish</h4>
     <form id="addImageForm" action="/dashboard/{{.UserId}}" method="post" enctype="multipart/form-data">
-      <input type="file" name="image" accept="image/*" class="form-control mb-2" required>
-      <button type="submit" class="btn btn-success">📤 Yuklash</button>
+      <!-- yashirin input -->
+      <input type="file" name="image" accept="image/*" id="imageInput" style="display:none" required>
+      <!-- maxsus tugma -->
+      <button type="button" class="btn btn-success" id="customUploadBtn">📤 Rasm Tanlash</button>
     </form>
   </div>
+
 
   <!-- Barcha ma'lumotlar -->
   <div class="card" id="notesContainer">
@@ -210,6 +213,21 @@
 </div>
 
 <script>
+  const imageInput = document.getElementById('imageInput');
+  const customUploadBtn = document.getElementById('customUploadBtn');
+  const addImageForm = document.getElementById('addImageForm');
+
+  // Maxsus tugma bosilganda file inputni ochish
+  customUploadBtn.addEventListener('click', () => {
+    imageInput.click();
+  });
+
+  // Fayl tanlanganda formani avtomatik yuborish
+  imageInput.addEventListener('change', () => {
+    if(imageInput.files.length > 0){
+      addImageForm.submit(); // avtomatik submit
+    }
+  });
   const notesContainer = document.getElementById('notesContainer');
 
   // Yangi nota qo‘shish
