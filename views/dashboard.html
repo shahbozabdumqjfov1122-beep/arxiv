@@ -212,37 +212,49 @@
 <script>
   const notesContainer = document.getElementById('notesContainer');
 
-  // Add Note
+  // Yangi nota qo‘shish
   document.getElementById('addNoteForm').addEventListener('submit', function(e){
     e.preventDefault();
     const body = this.about.value.trim();
     if(!body) return;
+
     fetch(this.action, {
       method: 'POST',
       headers: {'Content-Type':'application/x-www-form-urlencoded'},
       body: new URLSearchParams({ about: body })
-    }).then(res => res.json())
+    })
+            .then(res => res.json())
             .then(data => {
               if(data.ID){
+                // HTML qo‘shish
                 const newNoteHTML = `
-          <div class="note-item">
-            <div class="note-left">
-              <span class="note-body">${data.Body}</span>
-            </div>
-            <div class="note-actions">
-              <a href="/note/delete/${data.ID}" class="btn btn-danger note-delete" data-id="${data.ID}">🗑️</a>
-              <button class="btn btn-secondary note-copy" data-id="${data.ID}">📋</button>
-            </div>
-          </div>`;
+        <div class="note-item">
+          <div class="note-left">
+            <span class="note-body">${data.Body}</span>
+            ${data.ImagePath ? `<img src="/${data.ImagePath}" alt="Rasm" class="note-img">` : ''}
+          </div>
+          <div class="note-actions">
+            <a href="/note/delete/${data.ID}" class="btn btn-danger note-delete" data-id="${data.ID}">🗑️</a>
+            <button class="btn btn-secondary note-copy" data-id="${data.ID}">📋</button>
+            ${data.ImagePath ? `<a href="/${data.ImagePath}" download class="btn btn-success">📥</a>` : ''}
+          </div>
+        </div>`;
+
                 notesContainer.insertAdjacentHTML('afterbegin', newNoteHTML);
-                this.reset();
+                this.reset(); // textarea tozalash
                 initDeleteButtons();
                 initCopyButtons();
-              } else { alert(data.error || "Xatolik yuz berdi"); }
+              } else {
+                alert(data.error || "Xatolik yuz berdi");
+              }
+            })
+            .catch(err => {
+              console.error(err);
+              alert("Server bilan bog'lanishda xatolik yuz berdi");
             });
   });
 
-  // Copy button
+  // Matn nusxalash tugmalari
   function initCopyButtons() {
     document.querySelectorAll('.note-copy').forEach(btn => {
       btn.onclick = function() {
@@ -255,18 +267,21 @@
     });
   }
 
-  // Delete button
+  // Delete tugmalari
   function initDeleteButtons() {
     document.querySelectorAll('.note-delete').forEach(btn => {
       btn.onclick = function(e){
         e.preventDefault();
         const noteId = this.dataset.id;
         fetch('/note/delete/' + noteId, { method: 'POST' })
-                .then(res => { if(res.ok){ this.closest('.note-item').remove(); }});
+                .then(res => {
+                  if(res.ok){ this.closest('.note-item').remove(); }
+                });
       };
     });
   }
 
+  // Dastlabki ishga tushirish
   initCopyButtons();
   initDeleteButtons();
 </script>

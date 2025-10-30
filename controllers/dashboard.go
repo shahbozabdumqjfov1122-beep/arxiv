@@ -32,8 +32,6 @@ func (c *DashboardController) Get() {
 	c.TplName = "dashboard.html"
 }
 
-// POST — yangi note qo‘shish (faqat text)
-// POST — yangi note qo‘shish (text yoki rasm)
 func (c *DashboardController) Post() {
 	sessID := c.GetSession("user_id")
 	if sessID == nil {
