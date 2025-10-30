@@ -213,65 +213,40 @@
 </div>
 
 <script>
-  const imageInput = document.getElementById('imageInput');
-  const customUploadBtn = document.getElementById('customUploadBtn');
-  const addImageForm = document.getElementById('addImageForm');
 
-  // Maxsus tugma bosilganda file inputni ochish
-  customUploadBtn.addEventListener('click', () => {
-    imageInput.click();
-  });
+  // Copy tugmalari
+  function initCopyButtons() {
+    document.querySelectorAll('.note-copy').forEach(btn => {
+      btn.onclick = function() {
+        const noteItem = this.closest('.note-item');
+        const text = noteItem.querySelector('.note-body').innerText;
+        navigator.clipboard.writeText(text).then(() => {
+          alert("Matn nusxalandi ✅");
+        });
+      };
+    });
+  }
 
-  // Fayl tanlanganda formani avtomatik yuborish
-  imageInput.addEventListener('change', () => {
-    if(imageInput.files.length > 0){
-      addImageForm.submit(); // avtomatik submit
-    }
-  });
-  const notesContainer = document.getElementById('notesContainer');
+  // Delete tugmalari
+  function initDeleteButtons() {
+    document.querySelectorAll('.note-delete').forEach(btn => {
+      btn.onclick = function(e){
+        e.preventDefault();
+        const noteId = this.dataset.id;
 
-  // Yangi nota qo‘shish
-  document.getElementById('addNoteForm').addEventListener('submit', function(e){
-    e.preventDefault();
-    const body = this.about.value.trim();
-    if(!body) return;
+        // Oddiy form yuborish orqali delete
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/note/delete/' + noteId;
+        document.body.appendChild(form);
+        form.submit();
+      };
+    });
+  }
 
-    fetch(this.action, {
-      method: 'POST',
-      headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body: new URLSearchParams({ about: body })
-    })
-            .then(res => res.json())
-            .then(data => {
-              if(data.ID){
-                // HTML qo‘shish
-                const newNoteHTML = `
-        <div class="note-item">
-          <div class="note-left">
-            <span class="note-body">${data.Body}</span>
-            ${data.ImagePath ? `<img src="/${data.ImagePath}" alt="Rasm" class="note-img">` : ''}
-          </div>
-          <div class="note-actions">
-            <a href="/note/delete/${data.ID}" class="btn btn-danger note-delete" data-id="${data.ID}">🗑️</a>
-            <button class="btn btn-secondary note-copy" data-id="${data.ID}">📋</button>
-            ${data.ImagePath ? `<a href="/${data.ImagePath}" download class="btn btn-success">📥</a>` : ''}
-          </div>
-        </div>`;
-
-                notesContainer.insertAdjacentHTML('afterbegin', newNoteHTML);
-                this.reset(); // textarea tozalash
-                initDeleteButtons();
-                initCopyButtons();
-              } else {
-                alert(data.error || "Xatolik yuz berdi");
-              }
-            })
-            .catch(err => {
-              console.error(err);
-              alert("Server bilan bog'lanishda xatolik yuz berdi");
-            });
-  });
-
+  // Dastlabki ishga tushirish
+  initCopyButtons();
+  initDeleteButtons();
   // Matn nusxalash tugmalari
   function initCopyButtons() {
     document.querySelectorAll('.note-copy').forEach(btn => {
