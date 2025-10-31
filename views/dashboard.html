@@ -178,9 +178,17 @@
   <!-- Rasm qo‘shish -->
   <div class="card">
     <h4>Rasm Qo‘shish</h4>
-    <form action="/dashboard/{{.UserId}}" method="post" enctype="multipart/form-data">
-      <input type="file" name="image" accept="image/*" class="form-control mb-2" required>
-      <button type="submit" class="btn btn-success">📤 Rasmni Yuklash</button>
+    <form id="addImageForm" action="/dashboard/{{.UserId}}" method="post" enctype="multipart/form-data">
+
+      <!-- Ko‘rinmas fayl input -->
+      <input type="file" name="image" accept="image/*" id="imageInput" style="display:none" required>
+
+      <!-- Tugma -->
+      <button type="button" class="btn btn-success" id="customUploadBtn">📸 Rasm Tanlash</button>
+      <span id="fileName" class="text-muted ms-2"></span>
+
+      <!-- Yuborish tugmasi -->
+      <button type="submit" class="btn btn-primary mt-2">💾 Saqlash</button>
     </form>
   </div>
 
@@ -209,10 +217,25 @@
     {{end}}
   </div>
 </div>
-
 <script>
+  // 📸 Rasm tanlash logikasi
+  const input = document.getElementById('imageInput');
+  const btn = document.getElementById('customUploadBtn');
+  const fileName = document.getElementById('fileName');
 
-  // Copy tugmalari
+  if (btn && input) {
+    // Tugmaga bosilganda fayl oynasini ochish
+    btn.addEventListener('click', () => input.click());
+
+    // Fayl tanlanganda nomini chiqarish
+    input.addEventListener('change', () => {
+      if (input.files.length > 0) {
+        fileName.textContent = input.files[0].name;
+      }
+    });
+  }
+
+  // 📋 Nusxalash tugmalari
   function initCopyButtons() {
     document.querySelectorAll('.note-copy').forEach(btn => {
       btn.onclick = function() {
@@ -225,56 +248,32 @@
     });
   }
 
-  // Delete tugmalari
+  // 🗑️ O‘chirish tugmalari
   function initDeleteButtons() {
     document.querySelectorAll('.note-delete').forEach(btn => {
       btn.onclick = function(e){
         e.preventDefault();
         const noteId = this.dataset.id;
 
-        // Oddiy form yuborish orqali delete
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '/note/delete/' + noteId;
-        document.body.appendChild(form);
-        form.submit();
-      };
-    });
-  }
-
-  // Dastlabki ishga tushirish
-  initCopyButtons();
-  initDeleteButtons();
-  // Matn nusxalash tugmalari
-  function initCopyButtons() {
-    document.querySelectorAll('.note-copy').forEach(btn => {
-      btn.onclick = function() {
-        const noteItem = this.closest('.note-item');
-        const text = noteItem.querySelector('.note-body').innerText;
-        navigator.clipboard.writeText(text).then(() => {
-          alert("Matn nusxalandi ✅");
-        });
-      };
-    });
-  }
-
-  // Delete tugmalari
-  function initDeleteButtons() {
-    document.querySelectorAll('.note-delete').forEach(btn => {
-      btn.onclick = function(e){
-        e.preventDefault();
-        const noteId = this.dataset.id;
         fetch('/note/delete/' + noteId, { method: 'POST' })
                 .then(res => {
-                  if(res.ok){ this.closest('.note-item').remove(); }
-                });
+                  if (res.ok) {
+                    this.closest('.note-item').remove();
+                  } else {
+                    alert("❌ O‘chirishda xato!");
+                  }
+                })
+                .catch(() => alert("Tarmoq xatosi!"));
       };
     });
   }
 
-  // Dastlabki ishga tushirish
-  initCopyButtons();
-  initDeleteButtons();
+  // 🚀 Dastlab ishga tushirish
+  document.addEventListener('DOMContentLoaded', () => {
+    initCopyButtons();
+    initDeleteButtons();
+  });
 </script>
+
 </body>
 </html>
