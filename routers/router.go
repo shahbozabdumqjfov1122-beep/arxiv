@@ -8,14 +8,21 @@ import (
 
 func init() {
 	beego.Router("/", &controllers.AuthController{}, "get:GetLogin")
+
 	beego.Router("/login", &controllers.AuthController{}, "get:GetLogin;post:PostLogin")
+
 	beego.Router("/register", &controllers.AuthController{}, "get:GetRegister;post:PostRegister")
+
 	beego.Router("/dashboard/:id", &controllers.DashboardController{}, "get:Get;post:Post")
+
+	beego.Router("/dashboard", &controllers.DashboardController{}, "get:dashboard;post:dashboard")
 	// routers/router.go
 
 	beego.Router("/note/toggle/:id", &controllers.NoteController{}, "post:Toggle")
+
 	beego.Router("/note/delete/:id", &controllers.NoteController{}, "post:Delete")
-	beego.Router("/dashboard/:id", &controllers.DashboardController{}, "post:Post")
+
+	beego.Router("/dashboard/:id", &controllers.DashboardController{}, "")
 
 	beego.Router("/logout", &controllers.AuthController{}, "get:Logout")
 

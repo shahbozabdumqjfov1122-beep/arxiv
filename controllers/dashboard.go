@@ -75,3 +75,7 @@ func (c *DashboardController) Post() {
 	// ✅ Sahifani qayta yuklash
 	c.Redirect("/dashboard", 302)
 }
+func (c *DashboardController) dashboard() {
+
+	c.TplName = "dashboard.html"
+}
