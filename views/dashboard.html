@@ -178,11 +178,9 @@
   <!-- Rasm qo‘shish -->
   <div class="card">
     <h4>Rasm Qo‘shish</h4>
-    <form id="addImageForm" action="/dashboard/{{.UserId}}" method="post" enctype="multipart/form-data">
-      <!-- yashirin input -->
-      <input type="file" name="image" accept="image/*" id="imageInput" style="display:none" required>
-      <!-- maxsus tugma -->
-      <button type="button" class="btn btn-success" id="customUploadBtn">📤 Rasm Tanlash</button>
+    <form action="/dashboard/{{.UserId}}" method="post" enctype="multipart/form-data">
+      <input type="file" name="image" accept="image/*" class="form-control mb-2" required>
+      <button type="submit" class="btn btn-success">📤 Rasmni Yuklash</button>
     </form>
   </div>
 
