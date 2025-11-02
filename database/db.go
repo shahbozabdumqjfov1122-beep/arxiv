@@ -13,7 +13,6 @@ import (
 var DB *gorm.DB
 
 func InitDB() {
-
 	runmode := beego.AppConfig.DefaultString("runmode", "dev")
 
 	dbHost, _ := beego.AppConfig.String(runmode + "::db_host")
@@ -27,20 +26,26 @@ func InitDB() {
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatalf(err.Error())
+		log.Fatalf("❌ DBga ulanish xatolik: %v", err)
 	}
 	DB = db
 
-	migrate()
-	SeedUserAdmin()
+	// Migrate: avval Admin, keyin User va Note
+	if err := DB.AutoMigrate(&models.Admin{}, &models.User{}, &models.Note{}); err != nil {
+		log.Fatalf("❌ Migration xatolik: %v", err)
+	}
 
+	// Avtomatik admin yaratish
+	SeedUserAdmin()
+	log.Println("✅ DB tayyor va Admin seeding bajarildi")
 }
 func migrate() {
 	err := DB.AutoMigrate(
+		&models.Admin{}, // avval
 		&models.User{},
-		&models.Note{},
-		&models.Admin{},
+		&models.Note{}, // oxir
 	)
+
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
