@@ -14,15 +14,13 @@ func init() {
 	beego.Router("/register", &controllers.AuthController{}, "get:GetRegister;post:PostRegister")
 
 	beego.Router("/dashboard/:id", &controllers.DashboardController{}, "get:Get;post:Post")
-
-	beego.Router("/dashboard", &controllers.DashboardController{}, "get:dashboard;post:dashboard")
 	// routers/router.go
 
 	beego.Router("/note/toggle/:id", &controllers.NoteController{}, "post:Toggle")
 
 	beego.Router("/note/delete/:id", &controllers.NoteController{}, "post:Delete")
 
-	beego.Router("/dashboard/:id", &controllers.DashboardController{}, "")
+	beego.Router("/dashboard/:id", &controllers.DashboardController{}, "get:Get")
 
 	beego.Router("/logout", &controllers.AuthController{}, "get:Logout")
 

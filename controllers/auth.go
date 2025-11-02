@@ -14,10 +14,12 @@ type AuthController struct {
 	beego.Controller
 }
 
+// Login sahifasini ko'rsatish
 func (c *AuthController) GetLogin() {
 	c.TplName = "login.html"
 }
 
+// Login POST
 func (c *AuthController) PostLogin() {
 	email := strings.TrimSpace(c.GetString("email"))
 	pass := strings.TrimSpace(c.GetString("password"))
