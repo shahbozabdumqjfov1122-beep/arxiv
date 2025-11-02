@@ -17,6 +17,7 @@ func init() {
 	// routers/router.go
 	beego.Router("/admin", &controllers.AdminController{}, "get:Get;post:Post")
 	beego.Router("/admin/login", &controllers.AdminController{}, "get:Login;post:LoginPost")
+	beego.Router("/admin/logout", &controllers.AdminController{}, "get:Logout")
 
 	beego.Router("/admin/create", &controllers.AdminController{}, "post:Post")
 	beego.Router("/admin/delete", &controllers.AdminController{}, "get:Delete")
