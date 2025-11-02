@@ -11,6 +11,16 @@ type RegisterController struct {
 	beego.Controller
 }
 
+func (c *RegisterController) Help() {
+	c.TplName = "help.html"
+}
+
+// agar POST ishlatmoqchi bo‘lsangiz:
+func (c *RegisterController) PostHelp() {
+	// POST logikasi
+	c.TplName = "help.html"
+}
+
 // GET /register — ro‘yxatdan o‘tish sahifasi
 func (c *RegisterController) Get() {
 	c.TplName = "register.html"

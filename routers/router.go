@@ -21,7 +21,7 @@ func init() {
 	beego.Router("/note/delete/:id", &controllers.NoteController{}, "post:Delete")
 
 	// Qo‘shimcha
-	beego.Router("/help", &controllers.RegisterController{}, "get:Help;post:Help")
+	beego.Router("/help", &controllers.RegisterController{}, "get:Help;post:PostHelp")
 	beego.Router("/buyurtma", &controllers.RegisterController{}, "get:Buyurtma;post:Buyurtma")
 
 	// Admin
