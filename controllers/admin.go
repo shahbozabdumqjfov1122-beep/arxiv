@@ -69,3 +69,29 @@ func (c *AdminController) Delete() {
 
 	c.Redirect("/admin", http.StatusFound)
 }
+func (c *AdminController) Add() {
+	email := c.GetString("gmail")
+	password := c.GetString("password")
+	_, fileHeader, _ := c.GetFile("image")
+
+	admin := models.Admin{
+		Firstname: email,
+		Email:     email,
+		Password:  password,
+		Role:      "User",
+	}
+
+	if fileHeader != nil {
+		imagePath := "uploads/" + fileHeader.Filename
+		c.SaveToFile("image", imagePath)
+		admin.ImagePath = imagePath
+	}
+
+	if err := database.DB.Create(&admin).Error; err != nil {
+		c.Data["Error"] = "Yangi foydalanuvchi qo‘shishda xatolik: " + err.Error()
+		c.TplName = "admin.html"
+		return
+	}
+
+	c.Redirect("/admin", 302)
+}

@@ -11,10 +11,11 @@ func init() {
 
 	beego.Router("/login", &controllers.AuthController{}, "get:GetLogin;post:PostLogin")
 
-	beego.Router("/register", &controllers.AuthController{}, "get:GetRegister;post:PostRegister")
+	beego.Router("/register", &controllers.RegisterController{}, "get:Get;post:Post")
 
 	beego.Router("/dashboard/:id", &controllers.DashboardController{}, "get:Get;post:Post")
 	// routers/router.go
+	beego.Router("/admin/add", &controllers.AdminController{}, "post:Add")
 
 	beego.Router("/note/toggle/:id", &controllers.NoteController{}, "post:Toggle")
 
@@ -24,8 +25,8 @@ func init() {
 
 	beego.Router("/logout", &controllers.AuthController{}, "get:Logout")
 
-	beego.Router("/help", &controllers.RegisterController{}, "get:Help;post:Help")
+	beego.Router("/help", &controllers.RegisterController{}, "get:Help;post:HelpPost")
 
-	beego.Router("/Buyurtma", &controllers.RegisterController{}, "get:Buyurtma;post:Buyurtma")
+	beego.Router("/Buyurtma", &controllers.RegisterController{}, "get:Buyurtma;post:BuyurtmaPost")
 
 }
