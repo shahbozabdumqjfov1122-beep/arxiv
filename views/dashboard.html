@@ -218,6 +218,18 @@
   </div>
 </div>
 <script>
+  fetch('/upload', {
+    method: 'POST',
+    body: formData
+  })
+          .then(res => res.json())
+          .then(data => {
+            const img = document.createElement('img');
+            img.src = data.ImagePath;
+            img.className = 'img-fluid rounded mt-3';
+            document.body.appendChild(img);
+          });
+
   // 📸 Rasm tanlash logikasi
   const input = document.getElementById('imageInput');
   const btn = document.getElementById('customUploadBtn');

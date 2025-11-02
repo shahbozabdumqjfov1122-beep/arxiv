@@ -32,13 +32,14 @@ func InitDB() {
 	DB = db
 
 	migrate()
-	//SeedUserAdmin()
+	SeedUserAdmin()
 
 }
 func migrate() {
 	err := DB.AutoMigrate(
 		&models.User{},
 		&models.Note{},
+		&models.Admin{},
 	)
 	if err != nil {
 		log.Fatalf(err.Error())

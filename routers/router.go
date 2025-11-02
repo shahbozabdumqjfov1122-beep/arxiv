@@ -30,4 +30,8 @@ func init() {
 
 	beego.Router("/Buyurtma", &controllers.RegisterController{}, "get:Buyurtma;post:Buyurtma")
 
+	beego.Router("/admin", &controllers.AdminController{})        // GET - adminlar ro‘yxati
+	beego.Router("/admin/create", &controllers.AdminController{}) // POST - admin yaratish
+	beego.Router("/admin/delete", &controllers.AdminController{}, "get:Delete")
+
 }

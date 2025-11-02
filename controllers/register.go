@@ -3,6 +3,7 @@ package controllers
 import (
 	"arxiv/database"
 	"arxiv/models"
+
 	beego "github.com/beego/beego/v2/server/web"
 )
 
@@ -10,37 +11,30 @@ type RegisterController struct {
 	beego.Controller
 }
 
-// GET - formani ko'rsatish
+// GET /register — ro‘yxatdan o‘tish sahifasi
 func (c *RegisterController) Get() {
 	c.TplName = "register.html"
 }
-func (c *RegisterController) Help() {
-	c.TplName = "help.html"
-}
-func (c *RegisterController) Buyurtma() {
-	c.TplName = "Buyurtma.html"
-}
 
-// POST - foydalanuvchi ma’lumotini saqlash
+// POST /register — foydalanuvchini saqlash
 func (c *RegisterController) Post() {
 	name := c.GetString("name")
 	email := c.GetString("email")
 	password := c.GetString("password")
 
-	// ✅ Parolni hash qilmasdan saqlash
+	// Yangi foydalanuvchi obyekt
 	user := models.User{
 		Name:     name,
 		Email:    email,
-		Password: password, // to'g'ridan-to'g'ri saqlanadi
+		Password: password, // ⚠️ ochiq parol
 	}
 
-	// GORM orqali saqlash
+	// Bazaga yozish
 	if err := database.DB.Create(&user).Error; err != nil {
-		c.Data["Error"] = "Foydalanuvchi saqlashda xatolik: " + err.Error()
+		c.Data["Error"] = "Xatolik: " + err.Error()
 		c.TplName = "register.html"
 		return
 	}
 
-	// muvaffaqiyatli saqlangandan keyin login sahifasiga yuborish
 	c.Redirect("/login", 302)
 }
