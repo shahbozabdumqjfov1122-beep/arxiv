@@ -13,7 +13,7 @@ func init() {
 	beego.Router("/register", &controllers.AuthController{}, "get:GetRegister;post:PostRegister")
 
 	// Dashboard
-	beego.Router("/dashboard", &controllers.DashboardController{}, "get:Get;post:Post")
+	beego.Router("/dashboard", &controllers.DashboardController{}, "post:Post")
 
 	// Nota operatsiyalari
 	beego.Router("/note/toggle/:id", &controllers.NoteController{}, "post:Toggle")
