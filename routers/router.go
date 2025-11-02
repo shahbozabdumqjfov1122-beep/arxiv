@@ -10,7 +10,6 @@ func init() {
 	// Auth
 	beego.Router("/", &controllers.AuthController{}, "get:GetLogin")
 	beego.Router("/login", &controllers.AuthController{}, "get:GetLogin;post:PostLogin")
-	// --- BU SATR O'ZGARTIRILDI ---
 	beego.Router("/register", &controllers.RegisterController{}, "get:Get;post:Post")
 	beego.Router("/logout", &controllers.AuthController{}, "get:Logout")
 
@@ -25,8 +24,8 @@ func init() {
 	beego.Router("/help", &controllers.RegisterController{}, "get:Help;post:PostHelp")
 	beego.Router("/Buyurtma", &controllers.RegisterController{}, "get:Buyurtma;post:Buyurtma")
 
-	// Admin
-	beego.Router("/admin", &controllers.AdminController{})        // GET - adminlar ro‘yxati
-	beego.Router("/admin/create", &controllers.AdminController{}) // POST - admin yaratish
-	beego.Router("/admin/delete", &controllers.AdminController{}, "get:Delete")
+	// Admin -- USHBU QISMDAN VAQTINCHA FOYDALANMANG
+	// beego.Router("/admin", &controllers.AdminController{})
+	// beego.Router("/admin/create", &controllers.AdminController{})
+	// beego.Router("/admin/delete", &controllers.AdminController{}, "get:Delete")
 }
