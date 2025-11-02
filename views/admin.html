@@ -31,7 +31,6 @@
             overflow-x: hidden;
         }
 
-        /* 恐怖背景元素 */
         body::before {
             content: "";
             position: fixed;
@@ -50,7 +49,6 @@
             100% { transform: translate(-100px, -100px) rotate(360deg); }
         }
 
-        /* 恐怖标题效果 */
         h2 {
             color: var(--accent);
             font-family: 'Creepster', cursive;
@@ -80,7 +78,6 @@
             }
         }
 
-        /* 添加蜘蛛网装饰 */
         .spiderweb {
             position: absolute;
             width: 150px;
@@ -114,7 +111,6 @@
             transform: rotate(15deg);
         }
 
-        /* 卡片恐怖效果 */
         .card {
             background: var(--card);
             border-radius: var(--radius);
@@ -149,7 +145,6 @@
             border-color: var(--primary);
         }
 
-        /* 添加血迹效果 */
         .blood-stain {
             position: absolute;
             width: 50px;
@@ -177,25 +172,42 @@
             transform: rotate(15deg) scale(0.9);
         }
 
-        /* 头像恐怖效果 */
-        .profile-img {
+        /* Profil placeholder - rasm o'rniga */
+        .profile-placeholder {
             width: 90px;
             height: 90px;
             border-radius: 50%;
-            object-fit: cover;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(96, 165, 250, 0.1));
             border: 3px solid var(--primary);
-            margin-bottom: 12px;
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+            margin: 0 auto 12px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
             transition: all 0.3s;
+        }
+
+        .profile-placeholder:hover {
+            transform: scale(1.05) rotate(5deg);
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.6);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(96, 165, 250, 0.2));
+        }
+
+        .horror-icon {
+            font-size: 40px;
+            color: var(--accent);
+            animation: pulse 2s infinite;
+            z-index: 2;
             position: relative;
         }
 
-        .profile-img:hover {
-            transform: scale(1.05);
-            filter: brightness(0.8) contrast(1.2);
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
         }
 
-        /* 添加眼睛跟随效果 */
         .eyes {
             position: absolute;
             width: 100%;
@@ -207,9 +219,10 @@
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.3s;
+            z-index: 3;
         }
 
-        .profile-img:hover + .eyes {
+        .profile-placeholder:hover .eyes {
             opacity: 1;
         }
 
@@ -220,6 +233,7 @@
             background: white;
             border-radius: 50%;
             top: 30%;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
         }
 
         .eye.left {
@@ -234,13 +248,26 @@
             position: absolute;
             width: 10px;
             height: 10px;
-            background: black;
+            background: var(--danger);
             border-radius: 50%;
             top: 5px;
             left: 5px;
+            transition: all 0.1s;
         }
 
-        /* 按钮恐怖效果 */
+        .card h5 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: var(--text);
+            font-family: 'Nosifier', cursive;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: var(--muted);
+            font-family: 'Griffy', cursive;
+        }
+
         .btn {
             border-radius: 10px;
             transition: 0.3s;
@@ -281,7 +308,6 @@
             opacity: 0.95;
         }
 
-        /* 表单区域恐怖效果 */
         .form-section {
             background: var(--bg-glass);
             border-radius: var(--radius);
@@ -339,7 +365,6 @@
             background: var(--accent);
         }
 
-        /* 添加蝙蝠动画 */
         .bat {
             position: fixed;
             width: 30px;
@@ -366,7 +391,6 @@
             position: relative;
         }
 
-        /* 添加恐怖警告 */
         .warning {
             position: fixed;
             bottom: 20px;
@@ -387,7 +411,6 @@
             100% { transform: scale(1); }
         }
 
-        /* 添加幽灵效果 */
         .ghost {
             position: fixed;
             width: 60px;
@@ -408,66 +431,55 @@
 </head>
 
 <body>
-<!-- 添加蜘蛛网装饰 -->
 <div class="spiderweb top-left"></div>
 <div class="spiderweb top-right"></div>
 <div class="spiderweb bottom-left"></div>
 <div class="spiderweb bottom-right"></div>
 
-<!-- 添加血迹效果 -->
 <div class="blood-stain random1"></div>
 <div class="blood-stain random2"></div>
 <div class="blood-stain random3"></div>
 
-<!-- 添加蝙蝠 -->
 <div class="bat" style="top: 10%;"></div>
 <div class="bat" style="top: 30%; animation-delay: 5s;"></div>
 <div class="bat" style="top: 50%; animation-delay: 10s;"></div>
 
-<!-- 添加幽灵 -->
 <div class="ghost" style="top: 20%; left: 10%;"></div>
 <div class="ghost" style="top: 40%; right: 15%; animation-delay: 3s;"></div>
 
 <div class="container">
     <h2>🧑‍💼 Admin Panel — Foydalanuvchilar 👻</h2>
 
-    <!-- Foydalanuvchilar ro‘yxati -->
+    <!-- Foydalanuvchilar ro'yxati - RASMSIZ -->
     <div class="row">
         {{range .Admins}}
         <div class="col-md-4 col-lg-3 mb-4">
             <div class="card text-center p-4 h-100">
-                {{if .ImagePath}}
-                <img src="/{{.ImagePath}}" class="profile-img" alt="User">
-                <div class="eyes">
-                    <div class="eye left">
-                        <div class="pupil"></div>
+                <!-- Rasm o'rniga dahshatli ikonka -->
+                <div class="profile-placeholder">
+                    <div class="horror-icon">
+                        <i class="fas fa-skull-crossbones"></i>
                     </div>
-                    <div class="eye right">
-                        <div class="pupil"></div>
-                    </div>
-                </div>
-                {{else}}
-                <img src="/static/img/default-user.png" class="profile-img" alt="Default">
-                <div class="eyes">
-                    <div class="eye left">
-                        <div class="pupil"></div>
-                    </div>
-                    <div class="eye right">
-                        <div class="pupil"></div>
+                    <div class="eyes">
+                        <div class="eye left">
+                            <div class="pupil"></div>
+                        </div>
+                        <div class="eye right">
+                            <div class="pupil"></div>
+                        </div>
                     </div>
                 </div>
-                {{end}}
                 <h5>{{.Email}}</h5>
                 <p>{{.Password}}</p>
-                <a href="/admin/delete?id={{.ID}}" class="btn btn-danger btn-sm mt-2 w-100">🗑️ O‘chirish</a>
+                <a href="/admin/delete?id={{.ID}}" class="btn btn-danger btn-sm mt-2 w-100">🗑️ O'chirish</a>
             </div>
         </div>
         {{end}}
     </div>
 
-    <!-- Foydalanuvchi qo‘shish formasi -->
+    <!-- Foydalanuvchi qo'shish formasi -->
     <div class="form-section">
-        <h4 class="mb-3">🆕 Yangi foydalanuvchi qo‘shish 🧟</h4>
+        <h4 class="mb-3">🆕 Yangi foydalanuvchi qo'shish 🧟</h4>
         <form action="/admin/add" method="POST" enctype="multipart/form-data" class="row g-3">
             <div class="col-md-4">
                 <input type="text" name="gmail" placeholder="Gmail" class="form-control" required>
@@ -479,7 +491,7 @@
                 <input type="file" name="image" class="form-control">
             </div>
             <div class="col-md-1">
-                <button class="btn btn-primary w-100">Qo‘shish</button>
+                <button class="btn btn-primary w-100">Qo'shish</button>
             </div>
         </form>
     </div>
@@ -489,13 +501,11 @@
     </footer>
 </div>
 
-<!-- 添加恐怖警告 -->
 <div class="warning">
     ⚠️ XAVF: BU JOYDA QO'rqinchli NARSALAR BOR ⚠️
 </div>
 
 <script>
-    // 眼睛跟随鼠标效果
     document.addEventListener('mousemove', (e) => {
         const eyes = document.querySelectorAll('.eye');
         eyes.forEach(eye => {
@@ -514,7 +524,6 @@
         });
     });
 
-    // 随机闪烁效果
     setInterval(() => {
         const cards = document.querySelectorAll('.card');
         const randomCard = cards[Math.floor(Math.random() * cards.length)];
@@ -524,7 +533,6 @@
         }, 500);
     }, 5000);
 
-    // 随机警告音效（仅视觉效果，不播放实际声音）
     setInterval(() => {
         const warning = document.querySelector('.warning');
         warning.style.animation = 'none';
