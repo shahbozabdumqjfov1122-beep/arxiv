@@ -13,7 +13,7 @@ func SeedUserAdmin() {
 	if err := DB.Where("role = ?", "Admin").First(&admin).Error; err != nil {
 		// Yangi admin yaratamiz
 		newAdmin := models.Admin{
-			Firstname: "Admin",
+			Firstname: "admin@example.com",
 			Role:      "Admin",
 			Password:  "123", // Istasangiz bu joyda hashing qo‘shing
 		}
