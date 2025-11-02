@@ -3,95 +3,70 @@ package controllers
 import (
 	"arxiv/database"
 	"arxiv/models"
-	"net/http"
-
 	beego "github.com/beego/beego/v2/server/web"
+	"net/http"
+	"strings"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
-// AdminController — adminlar bilan ishlash uchun controller
 type AdminController struct {
 	beego.Controller
 }
 
-// GET /admin
-// Adminlar ro‘yxatini ko‘rsatadi
-func (c *AdminController) Get() {
-	var admins []models.Admin
-	database.DB.Find(&admins)
+// ... (avvalgi kod) ...
 
-	c.Data["Admins"] = admins
-	c.TplName = "admin.html"
+// GET /admin/login
+func (c *AdminController) Login() {
+	// Agar xatolik xabari bo'lsa, uni templatega yuboramiz
+	c.TplName = "adminLogin.html"
 }
 
-// POST /admin/create
-// Yangi admin yaratadi
-func (c *AdminController) Post() {
-	firstname := c.GetString("firstname")
+// POST /admin/login
+func (c *AdminController) LoginPost() {
+	email := strings.TrimSpace(c.GetString("email"))
 	password := c.GetString("password")
-	role := c.GetString("role")
 
-	if firstname == "" || password == "" || role == "" {
-		c.Ctx.WriteString("⚠️ Maydonlar to‘ldirilmagan!")
+	if email == "" || password == "" {
+		c.Data["Error"] = "Iltimos, email va parolni kiriting."
+		c.TplName = "adminLogin.html"
 		return
 	}
 
-	// Parolni hash qilish
-	hashed, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		c.Ctx.WriteString("❌ Parolni shifrlashda xatolik")
+	var admin models.Admin
+	if err := database.DB.Where("email = ?", email).First(&admin).Error; err != nil {
+		// topilmadi
+		c.Data["Error"] = "Foydalanuvchi topilmadi."
+		c.TplName = "adminLogin.html"
 		return
 	}
 
-	admin := models.Admin{
-		Firstname: firstname,
-		Password:  string(hashed),
-		Role:      role,
+	// Parolni tekshirish:
+	// - agar admin.Password bcrypt hash bo'lsa, bcrypt bilan solishtiramiz
+	// - aks holda oddiy matn solishtirish (ehtiyot bo'ling: buni aniqroq qilish uchun yaratishda parolni hash qiling)
+	useBcrypt := false
+	if len(admin.Password) > 3 && (admin.Password[0:4] == "$2a$" || admin.Password[0:4] == "$2b$" || admin.Password[0:4] == "$2y$") {
+		useBcrypt = true
 	}
 
-	if err := database.DB.Create(&admin).Error; err != nil {
-		c.Ctx.WriteString("❌ Admin yaratilmadi: " + err.Error())
-		return
+	if useBcrypt {
+		if err := bcrypt.CompareHashAndPassword([]byte(admin.Password), []byte(password)); err != nil {
+			c.Data["Error"] = "Parol noto‘g‘ri."
+			c.TplName = "adminLogin.html"
+			return
+		}
+	} else {
+		// Eslatma: agar parollar xom matn sifatida saqlangan bo'lsa — xavfsizlik zaifligi.
+		if admin.Password != password {
+			c.Data["Error"] = "Parol noto‘g‘ri."
+			c.TplName = "adminLogin.html"
+			return
+		}
 	}
 
+	// Kirish muvaffaqiyatli — sessiya yoki cookie o'rnating (oddiy redirect ko'rsatish)
+	// beego sessiya ishlatayotgan bo'lsangiz misol:
+	c.SetSession("admin_id", admin.ID)
+	c.SetSession("admin_email", admin.Email)
 	c.Redirect("/admin", http.StatusFound)
-}
-
-// GET /admin/delete?id=1
-// Adminni o‘chirish
-func (c *AdminController) Delete() {
-	id, _ := c.GetInt("id")
-
-	if err := database.DB.Delete(&models.Admin{}, id).Error; err != nil {
-		c.Ctx.WriteString("❌ O‘chirishda xatolik: " + err.Error())
-		return
-	}
-
-	c.Redirect("/admin", http.StatusFound)
-}
-func (c *AdminController) Add() {
-	email := c.GetString("gmail")
-	password := c.GetString("password")
-	_, fileHeader, _ := c.GetFile("image")
-
-	admin := models.Admin{
-		Firstname: email,
-		Email:     email,
-		Password:  password,
-		Role:      "User",
-	}
-
-	if fileHeader != nil {
-		imagePath := "uploads/" + fileHeader.Filename
-		c.SaveToFile("image", imagePath)
-		admin.ImagePath = imagePath
-	}
-
-	if err := database.DB.Create(&admin).Error; err != nil {
-		c.Data["Error"] = "Yangi foydalanuvchi qo‘shishda xatolik: " + err.Error()
-		c.TplName = "admin.html"
-		return
-	}
-
-	c.Redirect("/admin", 302)
 }
