@@ -2,20 +2,26 @@ package database
 
 import (
 	"arxiv/models"
+	"golang.org/x/crypto/bcrypt"
 	"log"
 )
 
-// SeedUserAdmin — agar bazada admin yo‘q bo‘lsa, avtomatik yaratadi
 func SeedUserAdmin() {
 	var admin models.Admin
 
 	// Admin mavjudligini tekshiramiz
 	if err := DB.Where("role = ?", "Admin").First(&admin).Error; err != nil {
 		// Yangi admin yaratamiz
+		password := "123"
+
+		// Parolni hash qilamiz
+		hashed, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+
 		newAdmin := models.Admin{
-			Firstname: "admin@example.com",
+			Firstname: "Admin",             // ism
+			Email:     "admin@example.com", // login uchun email
 			Role:      "Admin",
-			Password:  "123", // Istasangiz bu joyda hashing qo‘shing
+			Password:  string(hashed), // hashed parol
 		}
 
 		if err := DB.Create(&newAdmin).Error; err != nil {
