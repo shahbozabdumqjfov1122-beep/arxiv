@@ -10,7 +10,8 @@ func init() {
 	// Auth
 	beego.Router("/", &controllers.AuthController{}, "get:GetLogin")
 	beego.Router("/login", &controllers.AuthController{}, "get:GetLogin;post:PostLogin")
-	beego.Router("/register", &controllers.AuthController{}, "get:GetRegister;post:PostRegister")
+	// --- BU SATR O'ZGARTIRILDI ---
+	beego.Router("/register", &controllers.RegisterController{}, "get:Get;post:Post")
 	beego.Router("/logout", &controllers.AuthController{}, "get:Logout")
 
 	// Dashboard

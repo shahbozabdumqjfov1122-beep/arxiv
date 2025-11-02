@@ -18,6 +18,10 @@ func (c *RegisterController) Help() {
 func (c *RegisterController) Buyurtma() {
 	c.TplName = "Buyurtma.html"
 }
+func (c *RegisterController) PostHelp() {
+	// Shu sahifani shunchaki POST qilganda qayta ko‘rsatamiz
+	c.TplName = "help.html"
+}
 
 // GET /register — ro‘yxatdan o‘tish sahifasi
 func (c *RegisterController) Get() {
