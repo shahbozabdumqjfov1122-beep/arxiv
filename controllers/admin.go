@@ -127,3 +127,28 @@ func (c *AdminController) Delete() {
 	// 5️⃣ Redirect
 	c.Redirect("/admin", 302)
 }
+func (c *AdminController) Add() {
+	email := c.GetString("email")
+	password := c.GetString("password")
+	role := c.GetString("role")
+
+	if email == "" || password == "" {
+		c.Ctx.WriteString("⚠️ Maydonlar to‘ldirilmagan!")
+		return
+	}
+
+	hashed, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	admin := models.Admin{
+		Firstname: email,
+		Email:     email,
+		Password:  string(hashed),
+		Role:      role,
+	}
+
+	if err := database.DB.Create(&admin).Error; err != nil {
+		c.Ctx.WriteString("❌ Yaratishda xatolik: " + err.Error())
+		return
+	}
+
+	c.Redirect("/admin", 302)
+}
