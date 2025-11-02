@@ -7,25 +7,27 @@ import (
 )
 
 func init() {
-	// Auth
 	beego.Router("/", &controllers.AuthController{}, "get:GetLogin")
+
 	beego.Router("/login", &controllers.AuthController{}, "get:GetLogin;post:PostLogin")
-	beego.Router("/register", &controllers.RegisterController{}, "get:Get;post:Post")
-	beego.Router("/logout", &controllers.AuthController{}, "get:Logout")
 
-	// Dashboard
-	beego.Router("/dashboard", &controllers.DashboardController{}, "get:Get;post:Post")
+	beego.Router("/register", &controllers.AuthController{}, "get:GetRegister;post:PostRegister")
 
-	// Nota
+	beego.Router("/dashboard/:id", &controllers.DashboardController{}, "get:Get;post:Post")
+
+	beego.Router("/dashboard", &controllers.DashboardController{}, "get:dashboard;post:dashboard")
+	// routers/router.go
+
 	beego.Router("/note/toggle/:id", &controllers.NoteController{}, "post:Toggle")
+
 	beego.Router("/note/delete/:id", &controllers.NoteController{}, "post:Delete")
 
-	// Qo‘shimcha
-	beego.Router("/help", &controllers.RegisterController{}, "get:Help;post:PostHelp")
+	beego.Router("/dashboard/:id", &controllers.DashboardController{}, "")
+
+	beego.Router("/logout", &controllers.AuthController{}, "get:Logout")
+
+	beego.Router("/help", &controllers.RegisterController{}, "get:Help;post:Help")
+
 	beego.Router("/Buyurtma", &controllers.RegisterController{}, "get:Buyurtma;post:Buyurtma")
 
-	// Admin -- USHBU QISMDAN VAQTINCHA FOYDALANMANG
-	// beego.Router("/admin", &controllers.AdminController{})
-	// beego.Router("/admin/create", &controllers.AdminController{})
-	// beego.Router("/admin/delete", &controllers.AdminController{}, "get:Delete")
 }
