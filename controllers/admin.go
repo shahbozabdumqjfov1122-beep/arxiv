@@ -17,10 +17,9 @@ type AdminController struct {
 
 // GET /admin — adminlar ro‘yxati
 func (c *AdminController) Get() {
-	// ✅ Sessiya tekshirish
+
 	adminID := c.GetSession("admin_id")
 	if adminID == nil {
-		// Agar sessiya yo‘q bo‘lsa, login sahifasiga yo‘naltir
 		c.Redirect("/admin/login", 302)
 		return
 	}

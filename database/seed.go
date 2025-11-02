@@ -9,7 +9,8 @@ import (
 func SeedUserAdmin() {
 	var admin models.Admin
 
-	if err := DB.Where("role = ?", "Admin").First(&admin).Error; err != nil {
+	// Email orqali tekshiramiz
+	if err := DB.Where("email = ?", "admin@example.com").First(&admin).Error; err != nil {
 		password := "123"
 		hashed, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 
