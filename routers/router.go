@@ -16,6 +16,7 @@ func init() {
 	beego.Router("/dashboard/:id", &controllers.DashboardController{}, "get:Get;post:Post")
 	// routers/router.go
 	beego.Router("/admin/add", &controllers.AdminController{}, "post:Add")
+	beego.Router("/admin", &controllers.AdminController{})
 
 	beego.Router("/note/toggle/:id", &controllers.NoteController{}, "post:Toggle")
 
