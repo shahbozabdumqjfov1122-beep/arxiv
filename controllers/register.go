@@ -15,10 +15,8 @@ func (c *RegisterController) Help() {
 	c.TplName = "help.html"
 }
 
-// agar POST ishlatmoqchi bo‘lsangiz:
-func (c *RegisterController) PostHelp() {
-	// POST logikasi
-	c.TplName = "help.html"
+func (c *RegisterController) Buyurtma() {
+	c.TplName = "Buyurtma.html"
 }
 
 // GET /register — ro‘yxatdan o‘tish sahifasi

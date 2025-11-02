@@ -22,7 +22,7 @@ func init() {
 
 	// Qo‘shimcha
 	beego.Router("/help", &controllers.RegisterController{}, "get:Help;post:PostHelp")
-	beego.Router("/buyurtma", &controllers.RegisterController{}, "get:Buyurtma;post:Buyurtma")
+	beego.Router("/Buyurtma", &controllers.RegisterController{}, "get:Buyurtma;post:Buyurtma")
 
 	// Admin
 	beego.Router("/admin", &controllers.AdminController{})        // GET - adminlar ro‘yxati
