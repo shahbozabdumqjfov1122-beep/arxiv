@@ -7,26 +7,24 @@ import (
 )
 
 func init() {
+	// Auth
 	beego.Router("/", &controllers.AuthController{}, "get:GetLogin")
-
 	beego.Router("/login", &controllers.AuthController{}, "get:GetLogin;post:PostLogin")
 	beego.Router("/register", &controllers.AuthController{}, "get:GetRegister;post:PostRegister")
+	beego.Router("/logout", &controllers.AuthController{}, "get:Logout")
 
 	// Dashboard
-	beego.Router("/dashboard", &controllers.DashboardController{}, "post:Post")
+	beego.Router("/dashboard", &controllers.DashboardController{}, "get:Get;post:Post")
 
-	// Nota operatsiyalari
+	// Nota
 	beego.Router("/note/toggle/:id", &controllers.NoteController{}, "post:Toggle")
 	beego.Router("/note/delete/:id", &controllers.NoteController{}, "post:Delete")
 
-	// Logout
-	beego.Router("/logout", &controllers.AuthController{}, "get:Logout")
-
-	// Qo‘shimcha sahifalar
+	// Qo‘shimcha
 	beego.Router("/help", &controllers.RegisterController{}, "get:Help;post:Help")
 	beego.Router("/buyurtma", &controllers.RegisterController{}, "get:Buyurtma;post:Buyurtma")
 
-	// Admin panel
+	// Admin
 	beego.Router("/admin", &controllers.AdminController{})        // GET - adminlar ro‘yxati
 	beego.Router("/admin/create", &controllers.AdminController{}) // POST - admin yaratish
 	beego.Router("/admin/delete", &controllers.AdminController{}, "get:Delete")
