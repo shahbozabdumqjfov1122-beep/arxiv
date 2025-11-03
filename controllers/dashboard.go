@@ -22,28 +22,22 @@ func (c *DashboardController) Get() {
 	userID := sessID.(uint)
 
 	var user models.User
+	// Notes’larni ID bo‘yicha kamayish tartibida olamiz
 	database.DB.Preload("Notes", func(db *gorm.DB) *gorm.DB {
 		return db.Order("id DESC")
 	}).First(&user, userID)
 
-	// Foydalanuvchi nomining bosh harfini olish
-	initial := ""
-	if len(user.Username) > 0 {
-		initial = string([]rune(user.Username)[0])
-	}
-
 	c.Data["User"] = user
-	c.Data["UserInitial"] = initial
 	c.Data["UserId"] = user.ID
 
+	// URL da 'success' parametri borligini tekshiramiz
 	if c.GetString("success") == "1" {
-		c.Data["success"] = true
+		c.Data["success"] = true // Agar bor bo'lsa, templatega 'success' ni yuboramiz
 	}
 
 	c.TplName = "dashboard.html"
 }
 
-// POST — yangi yozuv qo‘shish
 func (c *DashboardController) Post() {
 	sessID := c.GetSession("user_id")
 	if sessID == nil {
@@ -65,23 +59,23 @@ func (c *DashboardController) Post() {
 		}
 	}
 
-	// Bo‘sh ma’lumot bo‘lsa
+	// Matn ham yo‘q, rasm ham yo‘q bo‘lsa
 	if body == "" && imagePath == "" {
 		c.Ctx.WriteString("Hech qanday ma'lumot yuborilmadi")
 		return
 	}
 
+	// 📝 Bazaga yozish
 	note := models.Note{
 		UserID:    userID,
 		Body:      body,
 		ImagePath: imagePath,
 	}
-
 	if err := database.DB.Create(&note).Error; err != nil {
 		c.Ctx.WriteString("Bazaga yozishda xatolik: " + err.Error())
 		return
 	}
 
-	// ✅ Yozuv muvaffaqiyatli qo‘shilgach, sahifani yangilash
+	// Yozuv muvaffaqiyatli qo‘shilgach, sahifani yangilash
 	c.Redirect("/dashboard?success=1", 302)
 }
