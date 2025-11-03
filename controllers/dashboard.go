@@ -30,14 +30,14 @@ func (c *DashboardController) Get() {
 	c.Data["User"] = user
 	c.Data["UserId"] = user.ID
 
-	// URL da 'success' parametri borligini tekshiramiz
 	if c.GetString("success") == "1" {
-		c.Data["success"] = true // Agar bor bo'lsa, templatega 'success' ni yuboramiz
+		c.Data["success"] = true
 	}
 
 	c.TplName = "dashboard.html"
 }
 
+// POST — yangi yozuv qo‘shish
 func (c *DashboardController) Post() {
 	sessID := c.GetSession("user_id")
 	if sessID == nil {
@@ -48,7 +48,6 @@ func (c *DashboardController) Post() {
 
 	body := c.GetString("about")
 
-	// 📸 Faylni olish
 	_, header, err := c.GetFile("image")
 	var imagePath string
 	if err == nil && header != nil {
@@ -59,13 +58,11 @@ func (c *DashboardController) Post() {
 		}
 	}
 
-	// Matn ham yo‘q, rasm ham yo‘q bo‘lsa
 	if body == "" && imagePath == "" {
 		c.Ctx.WriteString("Hech qanday ma'lumot yuborilmadi")
 		return
 	}
 
-	// 📝 Bazaga yozish
 	note := models.Note{
 		UserID:    userID,
 		Body:      body,
@@ -76,6 +73,5 @@ func (c *DashboardController) Post() {
 		return
 	}
 
-	// Yozuv muvaffaqiyatli qo‘shilgach, sahifani yangilash
 	c.Redirect("/dashboard?success=1", 302)
 }
