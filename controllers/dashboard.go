@@ -5,6 +5,7 @@ import (
 	"arxiv/models"
 	beego "github.com/beego/beego/v2/server/web"
 	"gorm.io/gorm"
+	"time"
 )
 
 // DashboardController — faqat text yozuvlar bilan ishlaydi
@@ -28,6 +29,12 @@ func (c *DashboardController) Get() {
 	database.DB.Preload("Notes", func(db *gorm.DB) *gorm.DB {
 		return db.Order("id DESC")
 	}).First(&user, userID)
+
+	// ✅ O'zbekiston vaqtiga o‘tkazish
+	loc, _ := time.LoadLocation("Asia/Tashkent")
+	for i := range user.Notes {
+		user.Notes[i].CreatedAt = user.Notes[i].CreatedAt.In(loc)
+	}
 
 	c.Data["User"] = user
 	c.Data["UserId"] = user.ID
