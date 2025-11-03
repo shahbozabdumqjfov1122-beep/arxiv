@@ -13,7 +13,7 @@ func init() {
 
 	beego.Router("/register", &controllers.RegisterController{}, "get:Get;post:Post")
 
-	beego.Router("/dashboard/:id", &controllers.DashboardController{}, "get:Get;post:Post")
+	//beego.Router("/dashboard/:id", &controllers.DashboardController{}, "get:Get;post:Post")
 	// routers/router.go
 	beego.Router("/admin", &controllers.AdminController{}, "get:Get;post:Post")
 	beego.Router("/admin/login", &controllers.AdminController{}, "get:Login;post:LoginPost")
@@ -30,7 +30,7 @@ func init() {
 
 	beego.Router("/note/delete/:id", &controllers.NoteController{}, "post:Delete")
 
-	beego.Router("/dashboard/:id", &controllers.DashboardController{}, "get:Get")
+	//beego.Router("/dashboard/:id", &controllers.DashboardController{}, "get:Get")
 
 	beego.Router("/logout", &controllers.AuthController{}, "get:Logout")
 
