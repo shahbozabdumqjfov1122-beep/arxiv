@@ -3,19 +3,21 @@ package controllers
 import (
 	"arxiv/database"
 	"arxiv/models"
-	beego "github.com/beego/beego/v2/server/web"
 	"gorm.io/gorm"
 	"strconv"
+
+	beego "github.com/beego/beego/v2/server/web"
 )
 
-// DashboardController — faqat text yozuvlar bilan ishlaydi
+// DashboardController — foydalanuvchi yozuvlari bilan ishlaydi
 type DashboardController struct {
 	beego.Controller
 }
 
 // GET — dashboard sahifasini ko‘rsatish
 func (c *DashboardController) Get() {
-	idStr := c.Ctx.Input.Param(":id") // URL'dan id olish
+	// URL’dan :id olish
+	idStr := c.Ctx.Input.Param(":id")
 	userID, err := strconv.Atoi(idStr)
 	if err != nil {
 		c.CustomAbort(400, "Noto'g'ri ID")
@@ -30,22 +32,36 @@ func (c *DashboardController) Get() {
 		return
 	}
 
+	// User initial
+	initial := ""
+	if len(user.Username) > 0 {
+		initial = string([]rune(user.Username)[0])
+	}
+
 	c.Data["User"] = user
 	c.Data["UserId"] = user.ID
+	c.Data["UserInitial"] = initial
+
+	// URL parametrida 'success' borligini tekshirish
+	if c.GetString("success") == "1" {
+		c.Data["success"] = true
+	}
+
 	c.TplName = "dashboard.html"
 }
 
 // POST — yangi yozuv qo‘shish
 func (c *DashboardController) Post() {
-	sessID := c.GetSession("user_id")
-	if sessID == nil {
-		c.CustomAbort(401, "Avtorizatsiya talab qilinadi")
+	idStr := c.Ctx.Input.Param(":id")
+	userID, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.CustomAbort(400, "Noto'g'ri ID")
 		return
 	}
-	userID := sessID.(uint)
 
 	body := c.GetString("about")
 
+	// Faylni olish
 	_, header, err := c.GetFile("image")
 	var imagePath string
 	if err == nil && header != nil {
@@ -56,13 +72,15 @@ func (c *DashboardController) Post() {
 		}
 	}
 
+	// Hech narsa yuborilmasa
 	if body == "" && imagePath == "" {
 		c.Ctx.WriteString("Hech qanday ma'lumot yuborilmadi")
 		return
 	}
 
+	// Bazaga yozish
 	note := models.Note{
-		UserID:    userID,
+		UserID:    uint(userID),
 		Body:      body,
 		ImagePath: imagePath,
 	}
@@ -71,5 +89,6 @@ func (c *DashboardController) Post() {
 		return
 	}
 
-	c.Redirect("/dashboard?success=1", 302)
+	// Redirect + success
+	c.Redirect("/dashboard/"+strconv.Itoa(userID)+"?success=1", 302)
 }

@@ -411,7 +411,9 @@
           {{if .ImagePath}}
           <img src="/{{.ImagePath}}" alt="Rasm" class="note-image">
           {{end}}
-          <div class="note-date"><i class="far fa-clock"></i> {{.CreatedAt}}</div>
+          <div class="note-date">
+            <i class="far fa-clock"></i> {{.CreatedAt.Format "02.01.2006 15:04"}}
+          </div>
         </div>
         {{end}}
         {{else}}
