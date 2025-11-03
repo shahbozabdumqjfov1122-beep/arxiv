@@ -111,30 +111,39 @@
     </div>
 
     <div class="col-md-8">
-      <div class="glass-container">
-        <h4 class="mb-4"><i class="fas fa-sticky-note"></i> Mening yozuvlarim</h4>
+      <div class="glass-container p-4 rounded-4 shadow-lg">
+        <h4 class="mb-4 text-light d-flex align-items-center gap-2">
+          <i class="fas fa-sticky-note"></i>
+          <span>Mening yozuvlarim</span>
+        </h4>
+
         {{if .User.Notes}}
-        {{range .User.Notes}}
-        <div class="note-card">
-          <p>{{.Body}}</p>
-          {{if .ImagePath}}
-          <img src="/{{.ImagePath}}" alt="Rasm" class="note-image">
+          {{range .User.Notes}}
+            <div class="note-card mb-4 p-3 rounded-3 bg-dark bg-opacity-25 border border-secondary">
+              {{if .Body}}
+                <p class="text-light mb-2" style="white-space: pre-line;">{{.Body}}</p>
+              {{end}}
+
+              {{if .ImagePath}}
+                <div class="note-img-container text-center my-3">
+                  <img src="/{{.ImagePath}}" alt="Rasm" class="note-image img-fluid rounded-3 shadow-sm" style="max-height: 300px; object-fit: cover;">
+                </div>
+              {{end}}
+
+              <div class="note-date text-end text-secondary small mt-2">
+                <i class="far fa-clock"></i> {{.CreatedAt.Format "02.01.2006 15:04"}}
+              </div>
+            </div>
           {{end}}
-          <div class="note-date">
-            <i class="far fa-clock"></i> {{.CreatedAt.Format "02.01.2006 15:04"}}
-          </div>
-        </div>
-        {{end}}
         {{else}}
-        <div class="empty-state">
-          <i class="fas fa-inbox"></i>
-          <h5>Hali yozuvlar yo'q</h5>
-          <p>Yangi yozuv qo'shish uchun chapdagi formadan foydalaning</p>
-        </div>
+          <div class="empty-state text-center text-light py-5">
+            <i class="fas fa-inbox fa-3x mb-3 text-secondary"></i>
+            <h5>Hali yozuvlar yo‘q</h5>
+            <p class="text-muted">Yangi yozuv qo‘shish uchun chapdagi formadan foydalaning</p>
+          </div>
         {{end}}
       </div>
-    </div>
-  </div>
+    </div>  </div>
 </div>
 
 <script>

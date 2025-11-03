@@ -1,14 +1,15 @@
 package models
 
-import (
-	"time"
-)
+import "time"
 
 type Note struct {
-	ID        uint   `gorm:"primaryKey;autoIncrement"`
-	UserID    uint   `gorm:"not null"`
+	ID        uint   `gorm:"primaryKey"`
 	Body      string `gorm:"type:text;not null"`
+	Completed bool   `gorm:"default:false"`
 	ImagePath string `gorm:"size:255"`
 	CreatedAt time.Time
-	UpdatedAt time.Time
+
+	// Foydalanuvchi bilan bog‘lanish
+	UserID uint // FK (foreign key)
+	User   User `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
