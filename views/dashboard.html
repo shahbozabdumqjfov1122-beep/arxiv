@@ -288,8 +288,7 @@
 <!--</script>-->
 
 <!--</body>-->
-<!--</html>-->
-<!DOCTYPE html>
+<!--</html>--><!DOCTYPE html>
 <html lang="uz">
 <head>
   <meta charset="UTF-8">
@@ -307,17 +306,48 @@
       --text-secondary: #94a3b8;
       --border: rgba(59, 130, 246, 0.2);
     }
-    body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-height: 100vh; padding: 20px; }
-    .glass-container { background: var(--bg-glass); backdrop-filter: blur(10px); border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); padding: 25px; margin-bottom: 25px; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .glass-container {
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      padding: 25px;
+      margin-bottom: 25px;
+    }
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
     .logo { font-size: 28px; font-weight: bold; color: var(--primary); }
     .user-info { display: flex; align-items: center; gap: 15px; }
-    .user-avatar { width: 40px; height: 40px; border-radius: 50%; background-color: var(--primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+    .user-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background-color: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: bold;
+    }
     .btn-primary-custom { background-color: var(--primary); border: none; color: white; padding: 10px 20px; border-radius: 8px; font-weight: 500; transition: all 0.3s ease; }
     .btn-primary-custom:hover { background-color: var(--accent); transform: translateY(-2px); }
-    .form-control, .form-select { background-color: rgba(30, 41, 59, 0.7); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 12px 15px; }
-    .form-control:focus, .form-select:focus { background-color: rgba(30, 41, 59, 0.9); border-color: var(--primary); color: var(--text); box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25); }
-    .note-card { background-color: rgba(30, 41, 59, 0.5); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border); transition: all 0.3s ease; }
+    .form-control, .form-select {
+      background-color: rgba(30, 41, 59, 0.7);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 12px 15px;
+    }
+    .note-card {
+      background-color: rgba(30, 41, 59, 0.5);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
     .note-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); border-color: var(--accent); }
     .note-image { max-width: 100%; border-radius: 8px; margin-top: 15px; }
     .note-date { color: var(--text-secondary); font-size: 14px; margin-top: 10px; }
@@ -327,6 +357,7 @@
     .upload-area:hover { border-color: var(--primary); background-color: rgba(59, 130, 246, 0.1); }
     .logout-btn { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); padding: 8px 15px; border-radius: 8px; transition: all 0.3s ease; text-decoration: none; }
     .logout-btn:hover { background-color: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #ef4444; }
+    .alert-success { background-color: rgba(34,197,94,0.15); border: 1px solid #22c55e; color: #bbf7d0; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; }
   </style>
 </head>
 <body>
@@ -339,6 +370,10 @@
       <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Chiqish</a>
     </div>
   </div>
+
+  {{if .success}}
+  <div class="alert-success"><i class="fas fa-check-circle"></i> Yozuv muvaffaqiyatli qo'shildi!</div>
+  {{end}}
 
   <div class="row">
     <div class="col-md-4">
@@ -364,6 +399,7 @@
         </form>
       </div>
     </div>
+
     <div class="col-md-8">
       <div class="glass-container">
         <h4 class="mb-4"><i class="fas fa-sticky-note"></i> Mening yozuvlarim</h4>
@@ -374,7 +410,7 @@
           {{if .ImagePath}}
           <img src="/{{.ImagePath}}" alt="Rasm" class="note-image">
           {{end}}
-          <div class="note-date"><i class="far fa-clock"></i> {{.CreatedAt.Format "02.01.2006 15:04"}}</div>
+          <div class="note-date"><i class="far fa-clock"></i> {{.CreatedAt}}</div>
         </div>
         {{end}}
         {{else}}
@@ -389,7 +425,6 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   document.getElementById('image').addEventListener('change', function(e) {
     const file = e.target.files[0];

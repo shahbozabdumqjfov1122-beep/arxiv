@@ -3,14 +3,11 @@ package controllers
 import (
 	"arxiv/database"
 	"arxiv/models"
-	"os"
-	"path/filepath"
-	"strings"
-
 	beego "github.com/beego/beego/v2/server/web"
 	"gorm.io/gorm"
 )
 
+// DashboardController — faqat text yozuvlar bilan ishlaydi
 type DashboardController struct {
 	beego.Controller
 }
@@ -25,17 +22,24 @@ func (c *DashboardController) Get() {
 	userID := sessID.(uint)
 
 	var user models.User
-	err := database.DB.Preload("Notes", func(db *gorm.DB) *gorm.DB {
+	database.DB.Preload("Notes", func(db *gorm.DB) *gorm.DB {
 		return db.Order("id DESC")
-	}).First(&user, userID).Error
+	}).First(&user, userID)
 
-	if err != nil {
-		c.CustomAbort(404, "Foydalanuvchi topilmadi")
-		return
+	// Foydalanuvchi nomining bosh harfini olish
+	initial := ""
+	if len(user.Username) > 0 {
+		initial = string([]rune(user.Username)[0])
 	}
 
 	c.Data["User"] = user
+	c.Data["UserInitial"] = initial
 	c.Data["UserId"] = user.ID
+
+	if c.GetString("success") == "1" {
+		c.Data["success"] = true
+	}
+
 	c.TplName = "dashboard.html"
 }
 
@@ -50,35 +54,23 @@ func (c *DashboardController) Post() {
 
 	body := c.GetString("about")
 
-	// Faylni olish
-	file, header, err := c.GetFile("image")
+	// 📸 Faylni olish
+	_, header, err := c.GetFile("image")
 	var imagePath string
 	if err == nil && header != nil {
-		defer file.Close()
-
-		// upload papkasini yaratish (agar mavjud bo‘lmasa)
-		uploadDir := "static/uploads"
-		if _, err := os.Stat(uploadDir); os.IsNotExist(err) {
-			os.MkdirAll(uploadDir, 0755)
-		}
-
-		// Fayl nomini xavfsiz shaklda yaratish
-		filename := filepath.Base(header.Filename)
-		imagePath = filepath.Join(uploadDir, filename)
-
+		imagePath = "static/uploads/" + header.Filename
 		if err := c.SaveToFile("image", imagePath); err != nil {
 			c.Ctx.WriteString("Rasmni saqlashda xatolik: " + err.Error())
 			return
 		}
 	}
 
-	// Matn ham, rasm ham yo‘q bo‘lsa
-	if strings.TrimSpace(body) == "" && imagePath == "" {
+	// Bo‘sh ma’lumot bo‘lsa
+	if body == "" && imagePath == "" {
 		c.Ctx.WriteString("Hech qanday ma'lumot yuborilmadi")
 		return
 	}
 
-	// Yangi yozuv yaratish
 	note := models.Note{
 		UserID:    userID,
 		Body:      body,
@@ -90,6 +82,6 @@ func (c *DashboardController) Post() {
 		return
 	}
 
-	// Sahifani qayta yuklash
-	c.Redirect("/dashboard", 302)
+	// ✅ Yozuv muvaffaqiyatli qo‘shilgach, sahifani yangilash
+	c.Redirect("/dashboard?success=1", 302)
 }
