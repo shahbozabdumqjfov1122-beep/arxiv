@@ -37,5 +37,6 @@ func init() {
 	beego.Router("/help", &controllers.RegisterController{}, "get:Help;post:HelpPost")
 
 	beego.Router("/Buyurtma", &controllers.RegisterController{}, "get:Buyurtma;post:BuyurtmaPost")
+	beego.Router("/dashboard", &controllers.DashboardController{}, "get:Get;post:Post")
 
 }
