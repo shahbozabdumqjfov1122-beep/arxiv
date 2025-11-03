@@ -20,6 +20,7 @@ func (c *AuthController) GetLogin() {
 }
 
 // Login POST
+// Login POST
 func (c *AuthController) PostLogin() {
 	email := strings.TrimSpace(c.GetString("email"))
 	pass := strings.TrimSpace(c.GetString("password"))
