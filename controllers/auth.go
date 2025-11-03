@@ -3,7 +3,6 @@ package controllers
 import (
 	"arxiv/database"
 	"arxiv/models"
-	"strconv"
 	"strings"
 
 	beego "github.com/beego/beego/v2/server/web"
@@ -19,7 +18,6 @@ func (c *AuthController) GetLogin() {
 	c.TplName = "login.html"
 }
 
-// Login POST
 // Login POST
 func (c *AuthController) PostLogin() {
 	email := strings.TrimSpace(c.GetString("email"))
@@ -41,7 +39,7 @@ func (c *AuthController) PostLogin() {
 
 	// sessiyaga saqlash
 	c.SetSession("user_id", user.ID)
-	c.Redirect("/dashboard/"+strconv.Itoa(int(user.ID)), 302)
+	c.Redirect("/dashboard", 302) // ID ni URL'dan olib tashlang
 }
 
 // Register sahifasi
