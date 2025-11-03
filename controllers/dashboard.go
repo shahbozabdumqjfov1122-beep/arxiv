@@ -34,14 +34,7 @@ func (c *DashboardController) Get() {
 		return
 	}
 
-	// Foydalanuvchi bosh harfi (avatar uchun)
-	initial := "?"
-	if user.Username != "" {
-		initial = strings.ToUpper(string([]rune(user.Username)[0]))
-	}
-
 	c.Data["User"] = user
-	c.Data["UserInitial"] = initial
 	c.Data["UserId"] = user.ID
 	c.TplName = "dashboard.html"
 }
