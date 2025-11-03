@@ -20,7 +20,6 @@ func (c *AuthController) GetLogin() {
 }
 
 // Login POST
-// Login POST
 func (c *AuthController) PostLogin() {
 	email := strings.TrimSpace(c.GetString("email"))
 	pass := strings.TrimSpace(c.GetString("password"))
@@ -32,12 +31,14 @@ func (c *AuthController) PostLogin() {
 		return
 	}
 
+	// parol tekshirish
 	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(pass)) != nil {
 		c.Data["Error"] = "Email yoki parol noto'g'ri"
 		c.TplName = "login.html"
 		return
 	}
 
+	// sessiyaga saqlash
 	c.SetSession("user_id", user.ID)
 	c.Redirect("/dashboard/"+strconv.Itoa(int(user.ID)), 302)
 }

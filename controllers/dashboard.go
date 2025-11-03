@@ -3,84 +3,69 @@ package controllers
 import (
 	"arxiv/database"
 	"arxiv/models"
-	"gorm.io/gorm"
-	"strconv"
-
 	beego "github.com/beego/beego/v2/server/web"
+	"gorm.io/gorm"
 )
 
-// DashboardController — foydalanuvchi yozuvlari bilan ishlaydi
+// DashboardController — faqat text yozuvlar bilan ishlaydi
+
 type DashboardController struct {
 	beego.Controller
 }
 
 // GET — dashboard sahifasini ko‘rsatish
+
 func (c *DashboardController) Get() {
-	// URL’dan :id olish
-	idStr := c.Ctx.Input.Param(":id")
-	userID, err := strconv.Atoi(idStr)
-	if err != nil {
-		c.CustomAbort(400, "Noto'g'ri ID")
+	sessID := c.GetSession("user_id")
+	if sessID == nil {
+		c.Redirect("/login", 302)
 		return
 	}
+	userID := sessID.(uint)
 
 	var user models.User
-	if err := database.DB.Preload("Notes", func(db *gorm.DB) *gorm.DB {
+	// Notes’larni ID bo‘yicha kamayish tartibida olamiz
+	database.DB.Preload("Notes", func(db *gorm.DB) *gorm.DB {
 		return db.Order("id DESC")
-	}).First(&user, userID).Error; err != nil {
-		c.CustomAbort(404, "Foydalanuvchi topilmadi")
-		return
-	}
-
-	// User initial
-	initial := ""
-	if len(user.Username) > 0 {
-		initial = string([]rune(user.Username)[0])
-	}
+	}).First(&user, userID)
 
 	c.Data["User"] = user
 	c.Data["UserId"] = user.ID
-	c.Data["UserInitial"] = initial
-
-	// URL parametrida 'success' borligini tekshirish
-	if c.GetString("success") == "1" {
-		c.Data["success"] = true
-	}
-
 	c.TplName = "dashboard.html"
 }
 
-// POST — yangi yozuv qo‘shish
 func (c *DashboardController) Post() {
-	idStr := c.Ctx.Input.Param(":id")
-	userID, err := strconv.Atoi(idStr)
-	if err != nil {
-		c.CustomAbort(400, "Noto'g'ri ID")
+	sessID := c.GetSession("user_id")
+	if sessID == nil {
+		c.CustomAbort(401, "Avtorizatsiya talab qilinadi")
 		return
 	}
+	userID := sessID.(uint)
 
 	body := c.GetString("about")
 
-	// Faylni olish
+	// 📸 Faylni olish
 	_, header, err := c.GetFile("image")
 	var imagePath string
 	if err == nil && header != nil {
+		// Fayl nomini yaratish
 		imagePath = "static/uploads/" + header.Filename
+		// Faylni saqlash
 		if err := c.SaveToFile("image", imagePath); err != nil {
 			c.Ctx.WriteString("Rasmni saqlashda xatolik: " + err.Error())
 			return
 		}
 	}
 
-	// Hech narsa yuborilmasa
+	// Matn ham yo‘q, rasm ham yo‘q bo‘lsa
 	if body == "" && imagePath == "" {
 		c.Ctx.WriteString("Hech qanday ma'lumot yuborilmadi")
 		return
 	}
 
-	// Bazaga yozish
+	// 📝 Bazaga yozish
 	note := models.Note{
-		UserID:    uint(userID),
+		UserID:    userID,
 		Body:      body,
 		ImagePath: imagePath,
 	}
@@ -89,6 +74,6 @@ func (c *DashboardController) Post() {
 		return
 	}
 
-	// Redirect + success
-	c.Redirect("/dashboard/"+strconv.Itoa(userID)+"?success=1", 302)
+	// ✅ Sahifani qayta yuklash
+	c.Redirect("/dashboard", 302)
 }
