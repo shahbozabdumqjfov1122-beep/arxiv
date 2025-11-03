@@ -5,6 +5,7 @@ import (
 	"arxiv/models"
 	beego "github.com/beego/beego/v2/server/web"
 	"gorm.io/gorm"
+	"strconv"
 )
 
 // DashboardController — faqat text yozuvlar bilan ishlaydi
@@ -14,26 +15,23 @@ type DashboardController struct {
 
 // GET — dashboard sahifasini ko‘rsatish
 func (c *DashboardController) Get() {
-	sessID := c.GetSession("user_id")
-	if sessID == nil {
-		c.Redirect("/login", 302)
+	idStr := c.Ctx.Input.Param(":id") // URL'dan id olish
+	userID, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.CustomAbort(400, "Noto'g'ri ID")
 		return
 	}
-	userID := sessID.(uint)
 
 	var user models.User
-	// Notes’larni ID bo‘yicha kamayish tartibida olamiz
-	database.DB.Preload("Notes", func(db *gorm.DB) *gorm.DB {
+	if err := database.DB.Preload("Notes", func(db *gorm.DB) *gorm.DB {
 		return db.Order("id DESC")
-	}).First(&user, userID)
+	}).First(&user, userID).Error; err != nil {
+		c.CustomAbort(404, "Foydalanuvchi topilmadi")
+		return
+	}
 
 	c.Data["User"] = user
 	c.Data["UserId"] = user.ID
-
-	if c.GetString("success") == "1" {
-		c.Data["success"] = true
-	}
-
 	c.TplName = "dashboard.html"
 }
 

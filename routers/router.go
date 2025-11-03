@@ -12,6 +12,7 @@ func init() {
 	beego.Router("/login", &controllers.AuthController{}, "get:GetLogin;post:PostLogin")
 
 	beego.Router("/register", &controllers.RegisterController{}, "get:Get;post:Post")
+	beego.Router("/dashboard/:id", &controllers.DashboardController{}, "get:Get;post:Post")
 
 	//beego.Router("/dashboard/:id", &controllers.DashboardController{}, "get:Get;post:Post")
 	// routers/router.go
