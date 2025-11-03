@@ -12,7 +12,7 @@ type NoteController struct {
 	beego.Controller
 }
 
-// Toggle note completed
+// Toggle note completed status
 func (c *NoteController) Toggle() {
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
@@ -23,20 +23,8 @@ func (c *NoteController) Toggle() {
 		return
 	}
 
-	note.Completed = !note.Completed
-	database.DB.Save(&note)
-	c.Ctx.Output.SetStatus(200)
-}
-
-// Delete note
-func (c *NoteController) Delete() {
-	idStr := c.Ctx.Input.Param(":id")
-	id, _ := strconv.Atoi(idStr)
-
-	if err := database.DB.Delete(&models.Note{}, id).Error; err != nil {
-		c.Ctx.Output.SetStatus(404)
-		return
-	}
-
+	// `Completed` maydoni o'chirilgan, shuning uchun bu qismni ham olib tashlaymiz
+	// note.Completed = !note.Completed
+	// database.DB.Save(&note)
 	c.Ctx.Output.SetStatus(200)
 }
