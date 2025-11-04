@@ -64,12 +64,12 @@ func (c *DashboardController) Post() {
 	database.DB.Model(&models.Note{}).Where("user_id = ? AND image_path <> ''", userID).Count(&totalImages)
 
 	// 🚫 Limitni tekshirish
-	if !hasImage && totalNotes >= 1000 {
+	if !hasImage && totalNotes >= 200 {
 		c.Data["LimitError"] = "❌ Siz 1000 ta yozuvdan ortiq qo‘sha olmaysiz."
 		c.Get()
 		return
 	}
-	if hasImage && totalImages >= 40 {
+	if hasImage && totalImages >= 30 {
 		c.Data["LimitError"] = "❌ Siz 40 ta rasm yuklay olmaysiz."
 		c.Get()
 		return
