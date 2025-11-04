@@ -6,6 +6,9 @@
   <title>Dashboard - Arxiv</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <style>
     :root {
       --bg: #0b1220;
@@ -48,6 +51,7 @@
     .note-actions { text-align: right; margin-top: 8px; }
     .note-card:hover { border-color: var(--accent); transform: translateY(-4px); transition: 0.3s; }
     .note-date { color: var(--text-secondary); font-size: 14px; margin-top: 10px; }
+    .upload-area { border: 1px dashed rgba(255,255,255,0.06); padding: 12px; text-align: center; border-radius: 8px; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -55,11 +59,23 @@
   <div class="header">
     <div class="logo"><i class="fas fa-archive"></i> Arxiv</div>
     <div class="user-info">
-      <div class="user-avatar">U</div>
+      <div class="user-avatar">{{if .User.Username}}{{(index .User.Username 0)}}{{else}}U{{end}}</div>
       <span>{{.User.Username}}</span>
-      <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Chiqish</a>
+      <a href="/logout" class="logout-btn text-decoration-none text-secondary"><i class="fas fa-sign-out-alt"></i> Chiqish</a>
     </div>
   </div>
+
+  <!-- Bootstrap alert (serverdan kelgan LimitError uchun) -->
+  {{if .LimitError}}
+    <div class="alert alert-danger text-center fw-bold mt-3" role="alert">
+      {{.LimitError}}
+    </div>
+  {{end}}
+
+  <!-- Data element for SweetAlert2 (safer to pass message via data-attribute) -->
+  <div id="serverMessages"
+       data-limit-error='{{.LimitError}}'
+       style="display:none;"></div>
 
   <div class="row">
     <div class="col-md-4">
@@ -72,12 +88,10 @@
           </div>
           <div class="mb-3">
             <label for="image" class="form-label">Rasm (ixtiyoriy)</label>
-            <div class="upload-area">
+            <div class="upload-area" onclick="document.getElementById('image').click();">
               <input type="file" class="form-control" id="image" name="image" accept="image/*" style="display: none;">
-              <label for="image" style="cursor: pointer; margin: 0; display: block;">
-                <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
-                <p>Rasmni tanlash uchun bosing</p>
-              </label>
+              <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
+              <p style="margin:0;">Rasmni tanlash uchun bosing</p>
               <div id="imagePreview" style="margin-top: 10px;"></div>
             </div>
           </div>
@@ -111,7 +125,7 @@
               </div>
 
               <div class="note-actions">
-                <button class="btn btn-danger-custom btn-sm" onclick="deleteNote({{.ID}})">
+                <button class="btn btn-danger-custom btn-sm" onclick="confirmDelete({{.ID}})">
                   <i class="fas fa-trash"></i> O‘chirish
                 </button>
               </div>
@@ -130,19 +144,7 @@
 </div>
 
 <script>
-  function deleteNote(id) {
-    if (!confirm("Bu yozuvni o‘chirishni istaysizmi?")) return;
-
-    fetch(`/note/delete/${id}`, { method: "DELETE" })
-            .then(res => {
-              if (res.ok) {
-                location.reload();
-              } else {
-                alert("O‘chirishda xatolik yuz berdi.");
-              }
-            });
-  }
-
+  // Image preview
   document.getElementById('image').addEventListener('change', function(e) {
     const file = e.target.files[0];
     const preview = document.getElementById('imagePreview');
@@ -156,6 +158,61 @@
       preview.innerHTML = '';
     }
   });
+
+  // SweetAlert2: serverdan kelgan limit xabarini ko'rsatish
+  (function() {
+    try {
+      const el = document.getElementById('serverMessages');
+      if (!el) return;
+      const limitMsg = el.getAttribute('data-limit-error') || '';
+      if (limitMsg && limitMsg.trim() !== '') {
+        // Bootstrap alert already mavjud — ammo SweetAlert bilan ham ko'rsatamiz
+        Swal.fire({
+          icon: 'error',
+          title: 'Limit to‘ldi',
+          text: limitMsg,
+          confirmButtonText: 'Tushunarli'
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  })();
+
+  // Funksiya: o'chirishni SweetAlert orqali tasdiqlash va fetch bilan DELETE
+  function confirmDelete(id) {
+    Swal.fire({
+      title: 'Haqiqatan ham o‘chirasizmi?',
+      text: "Bu amalni qaytarib bo'lmaydi!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Ha, o‘chirilsin',
+      cancelButtonText: 'Bekor qilish'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`/note/delete/${id}`, { method: "DELETE" })
+                .then(res => {
+                  if (res.ok) {
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'O‘chirildi',
+                      showConfirmButton: false,
+                      timer: 900
+                    }).then(() => { location.reload(); });
+                  } else {
+                    res.text().then(txt => {
+                      Swal.fire('Xato', txt || 'O‘chirishda xatolik yuz berdi.', 'error');
+                    });
+                  }
+                })
+                .catch(err => {
+                  Swal.fire('Xato', 'Tarmoq xatosi: ' + err.message, 'error');
+                });
+      }
+    });
+  }
 </script>
 </body>
 </html>

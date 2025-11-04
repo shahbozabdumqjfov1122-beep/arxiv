@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"os"
 	"strconv"
 
 	"arxiv/database"
@@ -38,30 +37,18 @@ func (c *NoteController) Toggle() {
 	c.Ctx.WriteString("Tugallanish holati o‘zgartirildi")
 }
 
-// DELETE yoki GET orqali o'chirish
 // DELETE /note/delete/:id
 func (c *NoteController) Delete() {
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
 
-	var note models.Note
-	if err := database.DB.First(&note, id).Error; err != nil {
-		c.Ctx.Output.SetStatus(404)
-		c.Ctx.WriteString("Not found")
-		return
-	}
-
-	// Rasm faylini ham o‘chirish
-	if note.ImagePath != "" {
-		os.Remove(note.ImagePath)
-	}
-
-	// Bazadan o‘chirish
+	// 🗑️ Yozuvni bazadan o‘chiramiz
 	if err := database.DB.Delete(&models.Note{}, id).Error; err != nil {
-		c.Ctx.Output.SetStatus(500)
-		c.Ctx.WriteString("Bazadan o‘chirishda xatolik")
+		c.Ctx.Output.SetStatus(404)
+		c.Ctx.WriteString("O‘chirishda xatolik: " + err.Error())
 		return
 	}
 
+	// ✅ O‘chirilgandan so‘ng status 200 qaytariladi
 	c.Ctx.Output.SetStatus(200)
 }
