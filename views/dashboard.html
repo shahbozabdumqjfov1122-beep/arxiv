@@ -43,31 +43,11 @@
     }
     .btn-primary-custom { background-color: var(--primary); border: none; color: white; padding: 10px 20px; border-radius: 8px; font-weight: 500; transition: all 0.3s ease; }
     .btn-primary-custom:hover { background-color: var(--accent); transform: translateY(-2px); }
-    .form-control, .form-select {
-      background-color: rgba(30, 41, 59, 0.7);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 8px;
-      padding: 12px 15px;
-    }
-    .note-card {
-      background-color: rgba(30, 41, 59, 0.5);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 20px;
-      border: 1px solid var(--border);
-      transition: all 0.3s ease;
-    }
-    .note-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); border-color: var(--accent); }
-    .note-image { max-width: 100%; border-radius: 8px; margin-top: 15px; }
+    .btn-danger-custom { background-color: #ef4444; border: none; color: white; padding: 6px 12px; border-radius: 8px; transition: all 0.3s ease; }
+    .btn-danger-custom:hover { background-color: #dc2626; transform: scale(1.03); }
+    .note-actions { text-align: right; margin-top: 8px; }
+    .note-card:hover { border-color: var(--accent); transform: translateY(-4px); transition: 0.3s; }
     .note-date { color: var(--text-secondary); font-size: 14px; margin-top: 10px; }
-    .empty-state { text-align: center; padding: 40px 20px; color: var(--text-secondary); }
-    .empty-state i { font-size: 48px; margin-bottom: 15px; color: var(--primary); }
-    .upload-area { border: 2px dashed var(--border); border-radius: 8px; padding: 20px; text-align: center; margin-top: 15px; transition: all 0.3s ease; cursor: pointer; }
-    .upload-area:hover { border-color: var(--primary); background-color: rgba(59, 130, 246, 0.1); }
-    .logout-btn { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); padding: 8px 15px; border-radius: 8px; transition: all 0.3s ease; text-decoration: none; }
-    .logout-btn:hover { background-color: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #ef4444; }
-    .alert-success { background-color: rgba(34,197,94,0.15); border: 1px solid #22c55e; color: #bbf7d0; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; }
   </style>
 </head>
 <body>
@@ -80,10 +60,6 @@
       <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Chiqish</a>
     </div>
   </div>
-
-  {{if .success}}
-  <div class="alert-success"><i class="fas fa-check-circle"></i>   muvaffaqiyatli qo'shildi!</div>
-  {{end}}
 
   <div class="row">
     <div class="col-md-4">
@@ -133,6 +109,12 @@
               <div class="note-date text-end text-secondary small mt-2">
                 <i class="far fa-clock"></i> {{.CreatedAt.Format "02.01.2006 15:04"}}
               </div>
+
+              <div class="note-actions">
+                <button class="btn btn-danger-custom btn-sm" onclick="deleteNote({{.ID}})">
+                  <i class="fas fa-trash"></i> O‘chirish
+                </button>
+              </div>
             </div>
           {{end}}
         {{else}}
@@ -143,10 +125,24 @@
           </div>
         {{end}}
       </div>
-    </div>  </div>
+    </div>
+  </div>
 </div>
 
 <script>
+  function deleteNote(id) {
+    if (!confirm("Bu yozuvni o‘chirishni istaysizmi?")) return;
+
+    fetch(`/note/delete/${id}`, { method: "DELETE" })
+            .then(res => {
+              if (res.ok) {
+                location.reload();
+              } else {
+                alert("O‘chirishda xatolik yuz berdi.");
+              }
+            });
+  }
+
   document.getElementById('image').addEventListener('change', function(e) {
     const file = e.target.files[0];
     const preview = document.getElementById('imagePreview');
