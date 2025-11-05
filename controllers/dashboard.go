@@ -65,12 +65,12 @@ func (c *DashboardController) Post() {
 
 	// 🚫 Limitni tekshirish
 	if !hasImage && totalNotes >= 200 {
-		c.Data["LimitError"] = "❌ Siz 1000 ta yozuvdan ortiq qo‘sha olmaysiz."
+		c.Data["LimitError"] = "❌ Siz 200 ta yozuvdan ortiq qo‘sha olmaysiz."
 		c.Get()
 		return
 	}
 	if hasImage && totalImages >= 30 {
-		c.Data["LimitError"] = "❌ Siz 40 ta rasm yuklay olmaysiz."
+		c.Data["LimitError"] = "❌ Siz 30 ta rasm yuklay olmaysiz."
 		c.Get()
 		return
 	}
