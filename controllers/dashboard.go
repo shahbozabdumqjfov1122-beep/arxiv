@@ -70,7 +70,7 @@ func (c *DashboardController) Post() {
 		return
 	}
 	if hasImage && totalImages >= 30 {
-		c.Data["LimitError"] = "❌ Siz 30 ta rasm yuklay olmaysiz."
+		c.Data["LimitError"] = "❌ Siz 30 tadan kop rasm yuklay olmaysiz."
 		c.Get()
 		return
 	}
