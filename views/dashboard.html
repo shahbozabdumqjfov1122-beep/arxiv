@@ -6,6 +6,9 @@
   <title>Dashboard - Arxiv</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <style>
     :root {
       --bg: #0b1220;
@@ -43,31 +46,12 @@
     }
     .btn-primary-custom { background-color: var(--primary); border: none; color: white; padding: 10px 20px; border-radius: 8px; font-weight: 500; transition: all 0.3s ease; }
     .btn-primary-custom:hover { background-color: var(--accent); transform: translateY(-2px); }
-    .form-control, .form-select {
-      background-color: rgba(30, 41, 59, 0.7);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 8px;
-      padding: 12px 15px;
-    }
-    .note-card {
-      background-color: rgba(30, 41, 59, 0.5);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 20px;
-      border: 1px solid var(--border);
-      transition: all 0.3s ease;
-    }
-    .note-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); border-color: var(--accent); }
-    .note-image { max-width: 100%; border-radius: 8px; margin-top: 15px; }
+    .btn-danger-custom { background-color: #ef4444; border: none; color: white; padding: 6px 12px; border-radius: 8px; transition: all 0.3s ease; }
+    .btn-danger-custom:hover { background-color: #dc2626; transform: scale(1.03); }
+    .note-actions { text-align: right; margin-top: 8px; }
+    .note-card:hover { border-color: var(--accent); transform: translateY(-4px); transition: 0.3s; }
     .note-date { color: var(--text-secondary); font-size: 14px; margin-top: 10px; }
-    .empty-state { text-align: center; padding: 40px 20px; color: var(--text-secondary); }
-    .empty-state i { font-size: 48px; margin-bottom: 15px; color: var(--primary); }
-    .upload-area { border: 2px dashed var(--border); border-radius: 8px; padding: 20px; text-align: center; margin-top: 15px; transition: all 0.3s ease; cursor: pointer; }
-    .upload-area:hover { border-color: var(--primary); background-color: rgba(59, 130, 246, 0.1); }
-    .logout-btn { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); padding: 8px 15px; border-radius: 8px; transition: all 0.3s ease; text-decoration: none; }
-    .logout-btn:hover { background-color: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #ef4444; }
-    .alert-success { background-color: rgba(34,197,94,0.15); border: 1px solid #22c55e; color: #bbf7d0; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; }
+    .upload-area { border: 1px dashed rgba(255,255,255,0.06); padding: 12px; text-align: center; border-radius: 8px; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -75,15 +59,23 @@
   <div class="header">
     <div class="logo"><i class="fas fa-archive"></i> Arxiv</div>
     <div class="user-info">
-      <div class="user-avatar">U</div>
+      <div class="user-avatar">{{if .User.Username}}{{(index .User.Username 0)}}{{else}}U{{end}}</div>
       <span>{{.User.Username}}</span>
-      <a href="/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Chiqish</a>
+      <a href="/logout" class="logout-btn text-decoration-none text-secondary"><i class="fas fa-sign-out-alt"></i> Chiqish</a>
     </div>
   </div>
 
-  {{if .success}}
-  <div class="alert-success"><i class="fas fa-check-circle"></i>   muvaffaqiyatli qo'shildi!</div>
+  <!-- Bootstrap alert (serverdan kelgan LimitError uchun) -->
+  {{if .LimitError}}
+    <div class="alert alert-danger text-center fw-bold mt-3" role="alert">
+      {{.LimitError}}
+    </div>
   {{end}}
+
+  <!-- Data element for SweetAlert2 (safer to pass message via data-attribute) -->
+  <div id="serverMessages"
+       data-limit-error='{{.LimitError}}'
+       style="display:none;"></div>
 
   <div class="row">
     <div class="col-md-4">
@@ -96,12 +88,10 @@
           </div>
           <div class="mb-3">
             <label for="image" class="form-label">Rasm (ixtiyoriy)</label>
-            <div class="upload-area">
+            <div class="upload-area" onclick="document.getElementById('image').click();">
               <input type="file" class="form-control" id="image" name="image" accept="image/*" style="display: none;">
-              <label for="image" style="cursor: pointer; margin: 0; display: block;">
-                <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
-                <p>Rasmni tanlash uchun bosing</p>
-              </label>
+              <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
+              <p style="margin:0;">Rasmni tanlash uchun bosing</p>
               <div id="imagePreview" style="margin-top: 10px;"></div>
             </div>
           </div>
@@ -111,26 +101,42 @@
     </div>
 
     <div class="col-md-8">
-      <div class="glass-container">
-        <h4 class="mb-4"><i class="fas fa-sticky-note"></i> Mening yozuvlarim</h4>
+      <div class="glass-container p-4 rounded-4 shadow-lg">
+        <h4 class="mb-4 text-light d-flex align-items-center gap-2">
+          <i class="fas fa-sticky-note"></i>
+          <span>Mening yozuvlarim</span>
+        </h4>
+
         {{if .User.Notes}}
-        {{range .User.Notes}}
-        <div class="note-card">
-          <p>{{.Body}}</p>
-          {{if .ImagePath}}
-          <img src="/{{.ImagePath}}" alt="Rasm" class="note-image">
+          {{range .User.Notes}}
+            <div class="note-card mb-4 p-3 rounded-3 bg-dark bg-opacity-25 border border-secondary">
+              {{if .Body}}
+                <p class="text-light mb-2" style="white-space: pre-line;">{{.Body}}</p>
+              {{end}}
+
+              {{if .ImagePath}}
+                <div class="note-img-container text-center my-3">
+                  <img src="/{{.ImagePath}}" alt="Rasm" class="note-image img-fluid rounded-3 shadow-sm" style="max-height: 300px; object-fit: cover;">
+                </div>
+              {{end}}
+
+              <div class="note-date text-end text-secondary small mt-2">
+                <i class="far fa-clock"></i> {{.CreatedAt.Format "02.01.2006 15:04"}}
+              </div>
+
+              <div class="note-actions">
+                <button class="btn btn-danger-custom btn-sm" onclick="confirmDelete({{.ID}})">
+                  <i class="fas fa-trash"></i> O‘chirish
+                </button>
+              </div>
+            </div>
           {{end}}
-          <div class="note-date">
-            <i class="far fa-clock"></i> {{.CreatedAt.Format "02.01.2006 15:04"}}
-          </div>
-        </div>
-        {{end}}
         {{else}}
-        <div class="empty-state">
-          <i class="fas fa-inbox"></i>
-          <h5>Hali yozuvlar yo'q</h5>
-          <p>Yangi yozuv qo'shish uchun chapdagi formadan foydalaning</p>
-        </div>
+          <div class="empty-state text-center text-light py-5">
+            <i class="fas fa-inbox fa-3x mb-3 text-secondary"></i>
+            <h5>Hali yozuvlar yo‘q</h5>
+            <p class="text-muted">Yangi yozuv qo‘shish uchun chapdagi formadan foydalaning</p>
+          </div>
         {{end}}
       </div>
     </div>
@@ -138,6 +144,7 @@
 </div>
 
 <script>
+  // Image preview
   document.getElementById('image').addEventListener('change', function(e) {
     const file = e.target.files[0];
     const preview = document.getElementById('imagePreview');
@@ -151,6 +158,61 @@
       preview.innerHTML = '';
     }
   });
+
+  // SweetAlert2: serverdan kelgan limit xabarini ko'rsatish
+  (function() {
+    try {
+      const el = document.getElementById('serverMessages');
+      if (!el) return;
+      const limitMsg = el.getAttribute('data-limit-error') || '';
+      if (limitMsg && limitMsg.trim() !== '') {
+        // Bootstrap alert already mavjud — ammo SweetAlert bilan ham ko'rsatamiz
+        Swal.fire({
+          icon: 'error',
+          title: 'Limit to‘ldi',
+          text: limitMsg,
+          confirmButtonText: 'Tushunarli'
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  })();
+
+  // Funksiya: o'chirishni SweetAlert orqali tasdiqlash va fetch bilan DELETE
+  function confirmDelete(id) {
+    Swal.fire({
+      title: 'Haqiqatan ham o‘chirasizmi?',
+      text: "Bu amalni qaytarib bo'lmaydi!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Ha, o‘chirilsin',
+      cancelButtonText: 'Bekor qilish'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`/note/delete/${id}`, { method: "DELETE" })
+                .then(res => {
+                  if (res.ok) {
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'O‘chirildi',
+                      showConfirmButton: false,
+                      timer: 900
+                    }).then(() => { location.reload(); });
+                  } else {
+                    res.text().then(txt => {
+                      Swal.fire('Xato', txt || 'O‘chirishda xatolik yuz berdi.', 'error');
+                    });
+                  }
+                })
+                .catch(err => {
+                  Swal.fire('Xato', 'Tarmoq xatosi: ' + err.message, 'error');
+                });
+      }
+    });
+  }
 </script>
 </body>
 </html>

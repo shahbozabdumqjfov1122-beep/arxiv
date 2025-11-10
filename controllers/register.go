@@ -19,11 +19,11 @@ func (c *RegisterController) HelpPost() {
 	c.TplName = "help.html"
 }
 func (c *RegisterController) Buyurtma() {
-	c.TplName = "help.html"
+	c.TplName = "Buyurtma.html"
 }
 
 func (c *RegisterController) BuyurtmaPost() {
-	c.TplName = "help.html"
+	c.TplName = "Buyurtma.html"
 }
 
 // GET - ro'yxatdan o'tish formasi
