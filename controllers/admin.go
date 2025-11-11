@@ -3,7 +3,6 @@ package controllers
 import (
 	"arxiv/database"
 	"arxiv/models"
-	"fmt"
 	"net/http"
 	"os"
 
@@ -170,19 +169,19 @@ func (c *AdminController) GetUser() {
 		return
 	}
 
-	var user models.Admin // yoki models.User
+	var user models.User // 👈 shu yerda Admin emas, User bo‘ladi
 	if err := database.DB.First(&user, id).Error; err != nil {
 		c.Ctx.ResponseWriter.WriteHeader(404)
 		c.Ctx.WriteString("User not found")
 		return
 	}
 
-	// Faqat parolsiz ma’lumot yuborish
-	c.Data["json"] = map[string]string{
-		"id":    fmt.Sprint(user.ID),
-		"name":  user.Firstname,
-		"email": user.Email,
-		"role":  user.Role,
+	c.Data["json"] = map[string]interface{}{
+		"id":        user.ID,
+		"name":      user.Name,
+		"email":     user.Email,
+		"username":  user.Username,
+		"createdAt": user.CreatedAt.Format("2006-01-02 15:04"),
 	}
 	c.ServeJSON()
 }

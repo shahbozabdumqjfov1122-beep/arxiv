@@ -380,28 +380,33 @@
     <div class="row">
         {{range .Admins}}
             <div class="col-md-4 col-lg-3 mb-4">
-                <div class="card text-center p-4 h-100 user-card" data-id="{{.ID}}">
-                    <!-- Rasm o'rniga dahshatli ikonka -->
+                <div class="card text-center p-4 h-100 user-card" data-id="{{.ID}}" onclick="showUserDetails({{.ID}})">
                     <div class="profile-placeholder">
                         <div class="horror-icon">
                             <i class="fas fa-skull-crossbones"></i>
                         </div>
                         <div class="eyes">
-                            <div class="eye left">
-                                <div class="pupil"></div>
-                            </div>
-                            <div class="eye right">
-                                <div class="pupil"></div>
-                            </div>
+                            <div class="eye left"><div class="pupil"></div></div>
+                            <div class="eye right"><div class="pupil"></div></div>
                         </div>
                     </div>
-                    <!-- User email va role ko'rsatiladi -->
                     <h5>{{.Email}}</h5>
                     <p>{{.Role}}</p>
                 </div>
             </div>
-
         {{end}}
+    </div>
+
+    <!-- Modal oynasi -->
+    <div class="modal fade" id="userModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content p-3">
+                <h4 id="userName"></h4>
+                <p><b>Email:</b> <span id="userEmail"></span></p>
+                <p><b>Username:</b> <span id="userUsername"></span></p>
+                <p><b>Ro‘yxatdan o‘tgan sana:</b> <span id="userCreated"></span></p>
+            </div>
+        </div>
     </div>
 
     <footer>
@@ -414,6 +419,21 @@
 </a>
 
 <script>
+    function showUserDetails(id) {
+        fetch(`/admin/user?id=${id}`)
+            .then(res => {
+                if (!res.ok) throw new Error('Ma’lumot topilmadi');
+                return res.json();
+            })
+            .then(data => {
+                document.getElementById('userName').textContent = data.name;
+                document.getElementById('userEmail').textContent = data.email;
+                document.getElementById('userUsername').textContent = data.username;
+                document.getElementById('userCreated').textContent = data.createdAt;
+                new bootstrap.Modal(document.getElementById('userModal')).show();
+            })
+            .catch(err => alert("❌ " + err.message));
+    }
     document.querySelectorAll('.user-card').forEach(card => {
         card.addEventListener('click', () => {
             const userId = card.getAttribute('data-id');
