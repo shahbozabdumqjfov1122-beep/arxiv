@@ -3,7 +3,10 @@ package controllers
 import (
 	"arxiv/database"
 	"arxiv/models"
+	"fmt"
+	"math/rand"
 	"strings"
+	"time"
 
 	beego "github.com/beego/beego/v2/server/web"
 	"golang.org/x/crypto/bcrypt"
@@ -48,7 +51,7 @@ func (c *RegisterController) Post() {
 	}
 
 	// 2️⃣ Emailni tekshirish
-	if strings.Contains(email, "@example.com") {
+	if strings.Contains(email, "@gmail.com") {
 		c.Data["Error"] = "❌ Iltimos, haqiqiy email kiriting (@gmail.com, @mail.ru va hokazo)."
 		c.TplName = "register.html"
 		return
@@ -67,15 +70,27 @@ func (c *RegisterController) Post() {
 		return
 	}
 
-	// 4️⃣ Foydalanuvchi allaqachon ro‘yxatdan o‘tganligini tekshirish
-	var existing models.User
-	if err := database.DB.Where("email = ?", email).First(&existing).Error; err == nil {
+	// 4️⃣ Foydalanuvchi allaqachon email bilan mavjudligini tekshirish
+	var existingEmail models.User
+	if err := database.DB.Where("email = ?", email).First(&existingEmail).Error; err == nil {
 		c.Data["Error"] = "⚠️ Bu email bilan foydalanuvchi allaqachon ro‘yxatdan o‘tgan!"
 		c.TplName = "register.html"
 		return
 	}
 
-	// 5️⃣ Parolni hash qilish
+	// 5️⃣ Username yagona bo‘lishini ta’minlash
+	username := strings.ToLower(strings.TrimSpace(name))
+	for {
+		var existingUser models.User
+		if err := database.DB.Where("username = ?", username).First(&existingUser).Error; err != nil {
+			break // username mavjud emas
+		}
+		// Tasodifiy qo‘shimcha qo‘shish
+		rand.Seed(time.Now().UnixNano())
+		username = fmt.Sprintf("%s_%d", strings.ToLower(strings.TrimSpace(name)), rand.Intn(1000))
+	}
+
+	// 6️⃣ Parolni hash qilish
 	hashed, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		c.Data["Error"] = "❌ Parolni shifrlashda xatolik: " + err.Error()
@@ -83,9 +98,10 @@ func (c *RegisterController) Post() {
 		return
 	}
 
-	// 6️⃣ User jadvaliga yozish
+	// 7️⃣ User jadvaliga yozish
 	user := models.User{
 		Name:     name,
+		Username: username,
 		Email:    email,
 		Password: string(hashed),
 	}
@@ -95,7 +111,7 @@ func (c *RegisterController) Post() {
 		return
 	}
 
-	// 7️⃣ Admin jadvaliga yozish (Role: User)
+	// 8️⃣ Admin jadvaliga yozish (Role: User)
 	admin := models.Admin{
 		Firstname: name,
 		Email:     email,
@@ -108,6 +124,6 @@ func (c *RegisterController) Post() {
 		return
 	}
 
-	// 8️⃣ Muvaffaqiyatli ro‘yxatdan o‘tganidan so‘ng
+	// 9️⃣ Muvaffaqiyatli ro‘yxatdan o‘tganidan so‘ng
 	c.Redirect("/login", 302)
 }
