@@ -71,8 +71,9 @@ func (c *RegisterController) Post() {
 	}
 
 	// 4️⃣ Foydalanuvchi allaqachon email bilan mavjudligini tekshirish
-	var existingEmail models.User
-	if err := database.DB.Where("email = ?", email).First(&existingEmail).Error; err == nil {
+	var existing models.User
+	result := database.DB.Where("email = ?", email).First(&existing)
+	if result.RowsAffected > 0 {
 		c.Data["Error"] = "⚠️ Bu email bilan foydalanuvchi allaqachon ro‘yxatdan o‘tgan!"
 		c.TplName = "register.html"
 		return
