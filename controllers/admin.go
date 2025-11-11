@@ -3,6 +3,7 @@ package controllers
 import (
 	"arxiv/database"
 	"arxiv/models"
+	"fmt"
 	"net/http"
 	"os"
 
@@ -151,4 +152,37 @@ func (c *AdminController) Add() {
 	}
 
 	c.Redirect("/admin", 302)
+}
+
+// GET /admin/user?id=1 — foydalanuvchi ma’lumotini JSON bilan qaytaradi
+func (c *AdminController) GetUser() {
+	adminID := c.GetSession("admin_id")
+	if adminID == nil {
+		c.Ctx.ResponseWriter.WriteHeader(401)
+		c.Ctx.WriteString("Unauthorized")
+		return
+	}
+
+	id, err := c.GetInt("id")
+	if err != nil {
+		c.Ctx.ResponseWriter.WriteHeader(400)
+		c.Ctx.WriteString("Invalid ID")
+		return
+	}
+
+	var user models.Admin // yoki models.User
+	if err := database.DB.First(&user, id).Error; err != nil {
+		c.Ctx.ResponseWriter.WriteHeader(404)
+		c.Ctx.WriteString("User not found")
+		return
+	}
+
+	// Faqat parolsiz ma’lumot yuborish
+	c.Data["json"] = map[string]string{
+		"id":    fmt.Sprint(user.ID),
+		"name":  user.Firstname,
+		"email": user.Email,
+		"role":  user.Role,
+	}
+	c.ServeJSON()
 }

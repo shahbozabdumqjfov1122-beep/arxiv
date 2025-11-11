@@ -268,87 +268,13 @@
             font-family: 'Griffy', cursive;
         }
 
-        /*.btn {*/
-        /*    border-radius: 10px;*/
-        /*    transition: 0.3s;*/
-        /*    position: relative;*/
-        /*    overflow: hidden;*/
-        /*}*/
-
-        /*.btn::before {*/
-        /*    content: "";*/
-        /*    position: absolute;*/
-        /*    top: 0;*/
-        /*    left: -100%;*/
-        /*    width: 100%;*/
-        /*    height: 100%;*/
-        /*    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);*/
-        /*    transition: left 0.5s;*/
-        /*}*/
-
-        /*.btn:hover::before {*/
-        /*    left: 100%;*/
-        /*}*/
-
-        /*.btn-primary {*/
-        /*    background: linear-gradient(135deg, var(--primary), var(--accent));*/
-        /*    border: none;*/
-        /*    font-weight: 500;*/
-        /*    font-family: 'Nosifier', cursive;*/
-        /*}*/
-
-        /*.btn-danger {*/
-        /*    background: var(--danger);*/
-        /*    border: none;*/
-        /*    font-family: 'Nosifier', cursive;*/
-        /*}*/
-
-        /*.btn:hover {*/
-        /*    transform: translateY(-2px);*/
-        /*    opacity: 0.95;*/
-        /*}*/
-
-        /*.form-section {*/
-        /*    background: var(--bg-glass);*/
-        /*    border-radius: var(--radius);*/
-        /*    padding: 30px;*/
-        /*    margin-top: 60px;*/
-        /*    box-shadow: 0 8px 25px var(--shadow);*/
-        /*    backdrop-filter: blur(10px);*/
-        /*    position: relative;*/
-        /*    overflow: hidden;*/
-        /*}*/
-
-        /*.form-section::before {*/
-        /*    content: "";*/
-        /*    position: absolute;*/
-        /*    top: 0;*/
-        /*    left: 0;*/
-        /*    width: 100%;*/
-        /*    height: 5px;*/
-        /*    background: linear-gradient(90deg, var(--danger), var(--primary), var(--accent));*/
-        /*    animation: glow 2s infinite alternate;*/
-        /*}*/
-
         @keyframes glow {
             from { opacity: 0.5; }
             to { opacity: 1; }
         }
 
-        .form-control {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text);
-            border-radius: 10px;
-            font-family: 'Griffy', cursive;
-        }
 
-        /*.form-control:focus {*/
-        /*    border-color: var(--accent);*/
-        /*    box-shadow: 0 0 10px rgba(96, 165, 250, 0.3);*/
-        /*    background: rgba(255, 255, 255, 0.08);*/
-        /*    color: #fff;*/
-        /*}*/
+
 
         input::file-selector-button {
             background: var(--primary);
@@ -453,47 +379,30 @@
     <!-- Foydalanuvchilar ro'yxati - RASMSIZ -->
     <div class="row">
         {{range .Admins}}
-        <div class="col-md-4 col-lg-3 mb-4">
-            <div class="card text-center p-4 h-100">
-                <!-- Rasm o'rniga dahshatli ikonka -->
-                <div class="profile-placeholder">
-                    <div class="horror-icon">
-                        <i class="fas fa-skull-crossbones"></i>
-                    </div>
-                    <div class="eyes">
-                        <div class="eye left">
-                            <div class="pupil"></div>
+            <div class="col-md-4 col-lg-3 mb-4">
+                <div class="card text-center p-4 h-100 user-card" data-id="{{.ID}}">
+                    <!-- Rasm o'rniga dahshatli ikonka -->
+                    <div class="profile-placeholder">
+                        <div class="horror-icon">
+                            <i class="fas fa-skull-crossbones"></i>
                         </div>
-                        <div class="eye right">
-                            <div class="pupil"></div>
+                        <div class="eyes">
+                            <div class="eye left">
+                                <div class="pupil"></div>
+                            </div>
+                            <div class="eye right">
+                                <div class="pupil"></div>
+                            </div>
                         </div>
                     </div>
+                    <!-- User email va role ko'rsatiladi -->
+                    <h5>{{.Email}}</h5>
+                    <p>{{.Role}}</p>
                 </div>
-                <h5>{{.Email}}</h5>
-                <p>{{.Password}}</p>
             </div>
-        </div>
+
         {{end}}
     </div>
-
-    <!-- Foydalanuvchi qo'shish formasi -->
-<!--    <div class="form-section">-->
-<!--        <h4 class="mb-3">🆕 Yangi foydalanuvchi qo'shish 🧟</h4>-->
-<!--        <form action="/admin/add" method="POST" enctype="multipart/form-data" class="row g-3">-->
-<!--            <div class="col-md-4">-->
-<!--                <input type="text" name="gmail" placeholder="Gmail" class="form-control" required>-->
-<!--            </div>-->
-<!--            <div class="col-md-4">-->
-<!--                <input type="password" name="password" placeholder="Parol" class="form-control" required>-->
-<!--            </div>-->
-<!--            <div class="col-md-3">-->
-<!--                <input type="file" name="image" class="form-control">-->
-<!--            </div>-->
-<!--            <div class="col-md-1">-->
-<!--                <button class="btn btn-primary w-100">Qo'shish</button>-->
-<!--            </div>-->
-<!--        </form>-->
-<!--    </div>-->
 
     <footer>
         <p>© 2025 Admin Panel. Dizayn: <span style="color: var(--accent);">Dark Horror</span> 💀👻🦇</p>
@@ -505,6 +414,20 @@
 </a>
 
 <script>
+    document.querySelectorAll('.user-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const userId = card.getAttribute('data-id');
+            fetch(`/admin/user?id=${userId}`)
+                .then(res => res.json())
+                .then(data => {
+                    alert(`Foydalanuvchi: ${data.name}\nEmail: ${data.email}\nRole: ${data.role}`);
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Xatolik yuz berdi');
+                });
+        });
+    });
     document.addEventListener('mousemove', (e) => {
         const eyes = document.querySelectorAll('.eye');
         eyes.forEach(eye => {
