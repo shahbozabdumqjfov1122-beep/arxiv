@@ -51,14 +51,14 @@ func (c *RegisterController) Post() {
 	}
 
 	// 2️⃣ Emailni tekshirish
-	if strings.Contains(email, "@gmail.com") {
-		c.Data["Error"] = "❌ Iltimos, haqiqiy email kiriting (@gmail.com, @mail.ru va hokazo)."
+	if email == "" || strings.HasSuffix(email, "@example.com") {
+		c.Data["Error"] = "❌ Iltimos, haqiqiy email kiriting (masalan: @gmail.com, @mail.ru)."
 		c.TplName = "register.html"
 		return
 	}
 
-	if !strings.Contains(email, "@") {
-		c.Data["Error"] = "❌ Email manzilda '@' belgisi bo‘lishi kerak."
+	if !strings.Contains(email, "@") || !strings.Contains(email, ".") {
+		c.Data["Error"] = "❌ Email manzilda '@' va domen bo‘lishi kerak (masalan: gmail.com)."
 		c.TplName = "register.html"
 		return
 	}
