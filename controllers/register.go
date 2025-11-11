@@ -48,7 +48,7 @@ func (c *RegisterController) Post() {
 	}
 
 	// 2️⃣ Emailni tekshirish
-	if strings.Contains(email, "@gmail.com") {
+	if strings.Contains(email, "@example.com") {
 		c.Data["Error"] = "❌ Iltimos, haqiqiy email kiriting (@gmail.com, @mail.ru va hokazo)."
 		c.TplName = "register.html"
 		return
@@ -60,7 +60,22 @@ func (c *RegisterController) Post() {
 		return
 	}
 
-	// 3️⃣ Parolni hash qilish
+	// 3️⃣ Parol uzunligini tekshirish
+	if len(password) < 6 {
+		c.Data["Error"] = "⚠️ Parol kamida 6 ta belgidan iborat bo‘lishi kerak!"
+		c.TplName = "register.html"
+		return
+	}
+
+	// 4️⃣ Foydalanuvchi allaqachon ro‘yxatdan o‘tganligini tekshirish
+	var existing models.User
+	if err := database.DB.Where("email = ?", email).First(&existing).Error; err == nil {
+		c.Data["Error"] = "⚠️ Bu email bilan foydalanuvchi allaqachon ro‘yxatdan o‘tgan!"
+		c.TplName = "register.html"
+		return
+	}
+
+	// 5️⃣ Parolni hash qilish
 	hashed, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		c.Data["Error"] = "❌ Parolni shifrlashda xatolik: " + err.Error()
@@ -68,7 +83,7 @@ func (c *RegisterController) Post() {
 		return
 	}
 
-	// 4️⃣ User jadvaliga yozish
+	// 6️⃣ User jadvaliga yozish
 	user := models.User{
 		Name:     name,
 		Email:    email,
@@ -80,7 +95,7 @@ func (c *RegisterController) Post() {
 		return
 	}
 
-	// 5️⃣ Admin jadvaliga yozish (Role: User)
+	// 7️⃣ Admin jadvaliga yozish (Role: User)
 	admin := models.Admin{
 		Firstname: name,
 		Email:     email,
@@ -93,6 +108,6 @@ func (c *RegisterController) Post() {
 		return
 	}
 
-	// 6️⃣ Muvaffaqiyatli — login sahifasiga yo‘naltirish
+	// 8️⃣ Muvaffaqiyatli ro‘yxatdan o‘tganidan so‘ng
 	c.Redirect("/login", 302)
 }

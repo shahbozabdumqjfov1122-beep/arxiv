@@ -18,6 +18,7 @@
       --text-secondary: #94a3b8;
       --border: rgba(59, 130, 246, 0.2);
     }
+
     body {
       background-color: var(--bg);
       color: var(--text);
@@ -25,6 +26,7 @@
       min-height: 100vh;
       padding: 20px;
     }
+
     .glass-container {
       background: var(--bg-glass);
       backdrop-filter: blur(10px);
@@ -34,27 +36,72 @@
       padding: 25px;
       margin-bottom: 25px;
     }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-    .logo { font-size: 28px; font-weight: bold; color: var(--primary); }
-    .user-info { display: flex; align-items: center; gap: 15px; }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
     .user-avatar {
       width: 40px; height: 40px; border-radius: 50%;
       background-color: var(--primary);
       display: flex; align-items: center; justify-content: center;
       color: white; font-weight: bold;
     }
-    .btn-primary-custom { background-color: var(--primary); border: none; color: white; padding: 10px 20px; border-radius: 8px; font-weight: 500; transition: all 0.3s ease; }
-    .btn-primary-custom:hover { background-color: var(--accent); transform: translateY(-2px); }
-    .btn-danger-custom { background-color: #ef4444; border: none; color: white; padding: 6px 12px; border-radius: 8px; transition: all 0.3s ease; }
-    .btn-danger-custom:hover { background-color: #dc2626; transform: scale(1.03); }
+
+    .btn-primary-custom {
+      background-color: var(--primary);
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary-custom:hover {
+      background-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .btn-danger-custom {
+      background-color: #ef4444;
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-danger-custom:hover {
+      background-color: #dc2626;
+      transform: scale(1.03);
+    }
+
     .note-actions { text-align: right; margin-top: 8px; }
     .note-card:hover { border-color: var(--accent); transform: translateY(-4px); transition: 0.3s; }
     .note-date { color: var(--text-secondary); font-size: 14px; margin-top: 10px; }
     .upload-area { border: 1px dashed rgba(255,255,255,0.06); padding: 12px; text-align: center; border-radius: 8px; cursor: pointer; }
   </style>
 </head>
+
 <body>
 <div class="container">
+
   <div class="header">
     <div class="logo"><i class="fas fa-archive"></i> Arxiv</div>
     <div class="user-info">
@@ -75,7 +122,7 @@
   <div class="row">
     <div class="col-md-4">
       <div class="glass-container">
-        <h4 class="mb-4"><i class="fas fa-plus-circle"></i> Yangi yozuv qo'shish</h4>
+        <h4 class="mb-4"><i class="fas fa-plus-circle"></i> Yangi yozuv qo‘shish</h4>
         <form method="post" action="/dashboard" enctype="multipart/form-data">
           <div class="mb-3">
             <label for="about" class="form-label">Matn</label>
@@ -105,13 +152,14 @@
         {{if .User.Notes}}
           {{range .User.Notes}}
             <div class="note-card mb-4 p-3 rounded-3 bg-dark bg-opacity-25 border border-secondary">
+
               {{if .Body}}
                 <p class="text-light mb-2" style="white-space: pre-line;">{{.Body}}</p>
               {{end}}
 
               {{if .ImagePath}}
                 <div class="note-img-container text-center my-3">
-                  <img src="/{{.ImagePath}}" alt="Rasm" class="note-image img-fluid rounded-3 shadow-sm" style="max-height: 300px; object-fit: cover; cursor: zoom-in;">
+                  <img src="/{{.ImagePath}}" alt="Rasm" class="note-image img-fluid rounded-3 shadow-sm" style="max-height: 300px; object-fit: cover;">
                 </div>
               {{end}}
 
@@ -119,7 +167,13 @@
                 <i class="far fa-clock"></i> {{.CreatedAt.Format "02.01.2006 15:04"}}
               </div>
 
-              <div class="note-actions">
+              <!-- ✅ O‘ZGARTIRILGAN QISM -->
+              <div class="note-actions d-flex justify-content-end gap-2 mt-2">
+                {{if .ImagePath}}
+                  <a href="/{{.ImagePath}}" download class="btn btn-primary-custom btn-sm">
+                    <i class="fas fa-download"></i>
+                  </a>
+                {{end}}
                 <button class="btn btn-danger-custom btn-sm" onclick="confirmDelete({{.ID}})">
                   <i class="fas fa-trash"></i> O‘chirish
                 </button>
@@ -138,22 +192,8 @@
   </div>
 </div>
 
-<!-- 🖼 Modal oynasi (rasmni to‘liq ko‘rsatish va yuklab olish) -->
-<div id="imageModal" class="position-fixed top-0 start-0 w-100 h-100 bg-black bg-opacity-75 d-flex justify-content-center align-items-center"
-     style="display:none; z-index:1055;">
-  <div class="position-relative text-center">
-    <img id="modalImage" src="" class="img-fluid rounded shadow" style="max-height:90vh; max-width:90vw;">
-    <button id="closeModalBtn" class="btn btn-light position-absolute top-0 end-0 m-3">
-      <i class="fas fa-times"></i>
-    </button>
-    <a id="downloadImageBtn" href="#" download class="btn btn-primary position-absolute bottom-0 end-0 m-3">
-      <i class="fas fa-download"></i>
-    </a>
-  </div>
-</div>
-
 <script>
-  // Rasm preview formda
+  // Image preview
   document.getElementById('image').addEventListener('change', function(e) {
     const file = e.target.files[0];
     const preview = document.getElementById('imagePreview');
@@ -168,13 +208,13 @@
     }
   });
 
-  // SweetAlert2 limit xabari
+  // SweetAlert2: limit xabari
   (function() {
     try {
       const el = document.getElementById('serverMessages');
       if (!el) return;
       const limitMsg = el.getAttribute('data-limit-error') || '';
-      if (limitMsg.trim() !== '') {
+      if (limitMsg && limitMsg.trim() !== '') {
         Swal.fire({
           icon: 'error',
           title: 'Limit to‘ldi',
@@ -182,10 +222,12 @@
           confirmButtonText: 'Tushunarli'
         });
       }
-    } catch (e) { console.error(e); }
+    } catch (e) {
+      console.error(e);
+    }
   })();
 
-  // SweetAlert bilan o‘chirish
+  // O‘chirish funksiyasi
   function confirmDelete(id) {
     Swal.fire({
       title: 'Haqiqatan ham o‘chirasizmi?',
@@ -201,43 +243,24 @@
         fetch(`/note/delete/${id}`, { method: "DELETE" })
                 .then(res => {
                   if (res.ok) {
-                    Swal.fire({ icon: 'success', title: 'O‘chirildi', showConfirmButton: false, timer: 900 })
-                            .then(() => { location.reload(); });
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'O‘chirildi',
+                      showConfirmButton: false,
+                      timer: 900
+                    }).then(() => { location.reload(); });
                   } else {
-                    res.text().then(txt => Swal.fire('Xato', txt || 'O‘chirishda xatolik yuz berdi.', 'error'));
+                    res.text().then(txt => {
+                      Swal.fire('Xato', txt || 'O‘chirishda xatolik yuz berdi.', 'error');
+                    });
                   }
                 })
-                .catch(err => Swal.fire('Xato', 'Tarmoq xatosi: ' + err.message, 'error'));
+                .catch(err => {
+                  Swal.fire('Xato', 'Tarmoq xatosi: ' + err.message, 'error');
+                });
       }
     });
   }
-
-  // --- Modal (rasmni to‘liq ekranda ochish va saqlash) ---
-  document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll('.note-image').forEach(img => {
-      img.addEventListener('click', () => {
-        const modal = document.getElementById('imageModal');
-        const modalImg = document.getElementById('modalImage');
-        const downloadBtn = document.getElementById('downloadImageBtn');
-        modalImg.src = img.src;
-        downloadBtn.href = img.src;
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-      });
-    });
-
-    document.getElementById('closeModalBtn').addEventListener('click', () => {
-      document.getElementById('imageModal').style.display = 'none';
-      document.body.style.overflow = 'auto';
-    });
-
-    document.getElementById('imageModal').addEventListener('click', (e) => {
-      if (e.target.id === 'imageModal') {
-        document.getElementById('imageModal').style.display = 'none';
-        document.body.style.overflow = 'auto';
-      }
-    });
-  });
 </script>
 </body>
 </html>
