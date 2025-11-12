@@ -2,31 +2,30 @@
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel — Foydalanuvchilar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Nosifier&family=Griffy&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         :root {
-            --bg: #0b1220;
-            --bg-glass: rgba(17, 25, 40, 0.85);
+            --bg-color: #121212;
+            --card-bg: rgba(30, 30, 30, 0.7);
             --primary: #3b82f6;
-            --accent: #60a5fa;
-            --danger: #ef4444;
-            --text: #e2e8f0;
-            --muted: #94a3b8;
-            --card: rgba(255, 255, 255, 0.05);
-            --shadow: rgba(0, 0, 0, 0.5);
-            --radius: 18px;
+            --secondary: #6366f1;
+            --accent: #ec4899;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --radius: 12px;
         }
 
         body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Griffy', cursive;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
             min-height: 100vh;
-            padding-bottom: 60px;
             position: relative;
             overflow-x: hidden;
         }
@@ -38,454 +37,343 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text y="50" font-size="100">💀</text></svg>') repeat;
-            opacity: 0.03;
+            background:
+                    radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 70%),
+                    radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.05) 0%, transparent 70%),
+                    radial-gradient(circle at 40% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
             z-index: -1;
-            animation: float 20s infinite linear;
         }
 
-        @keyframes float {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(-100px, -100px) rotate(360deg); }
-        }
-
-        h2 {
-            color: var(--accent);
-            font-family: 'Creepster', cursive;
-            font-weight: 600;
+        .header-section {
+            padding: 40px 0;
             text-align: center;
-            margin-top: 50px;
-            margin-bottom: 30px;
-            text-shadow: 0 0 12px rgba(96, 165, 250, 0.4);
             position: relative;
-            animation: flicker 3s infinite alternate;
         }
 
-        @keyframes flicker {
-            0%, 18%, 22%, 25%, 53%, 57%, 100% {
-                text-shadow:
-                        0 0 4px var(--accent),
-                        0 0 11px var(--accent),
-                        0 0 19px var(--accent),
-                        0 0 40px var(--primary),
-                        0 0 80px var(--primary),
-                        0 0 90px var(--primary),
-                        0 0 100px var(--primary),
-                        0 0 150px var(--primary);
-            }
-            20%, 24%, 55% {
-                text-shadow: none;
-            }
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
         }
 
-        .spiderweb {
+        .page-title::after {
+            content: "";
             position: absolute;
-            width: 150px;
-            height: 150px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50,0 L50,100 M0,50 L100,50 M15,15 L85,85 M85,15 L15,85" stroke="%2394a3b8" stroke-width="0.5" fill="none" opacity="0.3"/><circle cx="50" cy="50" r="10" stroke="%2394a3b8" stroke-width="0.5" fill="none" opacity="0.3"/><circle cx="50" cy="50" r="20" stroke="%2394a3b8" stroke-width="0.5" fill="none" opacity="0.3"/><circle cx="50" cy="50" r="30" stroke="%2394a3b8" stroke-width="0.5" fill="none" opacity="0.3"/><circle cx="50" cy="50" r="40" stroke="%2394a3b8" stroke-width="0.5" fill="none" opacity="0.3"/></svg>') no-repeat;
-            opacity: 0.2;
-            z-index: -1;
+            bottom: -8px;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            border-radius: 3px;
         }
 
-        .spiderweb.top-left {
-            top: 20px;
-            left: 20px;
-            transform: rotate(15deg);
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .spiderweb.top-right {
-            top: 20px;
-            right: 20px;
-            transform: rotate(-15deg);
-        }
-
-        .spiderweb.bottom-left {
-            bottom: 20px;
-            left: 20px;
-            transform: rotate(-15deg);
-        }
-
-        .spiderweb.bottom-right {
-            bottom: 20px;
-            right: 20px;
-            transform: rotate(15deg);
+        .main-container {
+            padding: 40px 0;
         }
 
         .card {
-            background: var(--card);
+            background: var(--card-bg);
+            border: 1px solid var(--border);
             border-radius: var(--radius);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 25px var(--shadow);
+            box-shadow: var(--shadow);
             transition: all 0.3s ease;
-            backdrop-filter: blur(14px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, rgba(0, 0, 0, 0) 70%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-
-        .card:hover::before {
-            opacity: 1;
+            backdrop-filter: blur(10px);
         }
 
         .card:hover {
-            transform: translateY(-6px) scale(1.02);
-            box-shadow: 0 10px 35px rgba(59, 130, 246, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
             border-color: var(--primary);
         }
 
-        .blood-stain {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50,10 C60,30 90,40 80,60 C70,80 40,70 30,60 C20,50 40,30 50,10" fill="%23ef4444" opacity="0.3"/></svg>') no-repeat;
-            opacity: 0.2;
-            z-index: -1;
+        .card-header {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(99, 102, 241, 0.1));
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
         }
 
-        .blood-stain.random1 {
-            top: 30%;
-            left: 10%;
-            transform: rotate(45deg) scale(0.8);
+        .card-body {
+            padding: 25px;
         }
 
-        .blood-stain.random2 {
-            top: 60%;
-            right: 15%;
-            transform: rotate(-30deg) scale(1.2);
-        }
-
-        .blood-stain.random3 {
-            bottom: 20%;
-            left: 30%;
-            transform: rotate(15deg) scale(0.9);
-        }
-
-        /* Profil placeholder - rasm o'rniga */
         .profile-placeholder {
-            width: 90px;
-            height: 90px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(96, 165, 250, 0.1));
-            border: 3px solid var(--primary);
-            margin: 0 auto 12px;
-            position: relative;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-            transition: all 0.3s;
-        }
-
-        .profile-placeholder:hover {
-            transform: scale(1.05) rotate(5deg);
-            box-shadow: 0 0 25px rgba(59, 130, 246, 0.6);
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(96, 165, 250, 0.2));
-        }
-
-        .horror-icon {
-            font-size: 40px;
-            color: var(--accent);
-            animation: pulse 2s infinite;
-            z-index: 2;
+            margin: 0 auto 20px;
             position: relative;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
-        }
-
-        .eyes {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
             overflow: hidden;
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 3;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
         }
 
-        .profile-placeholder:hover .eyes {
-            opacity: 1;
-        }
-
-        .eye {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            top: 30%;
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-        }
-
-        .eye.left {
-            left: 25%;
-        }
-
-        .eye.right {
-            right: 25%;
-        }
-
-        .pupil {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: var(--danger);
-            border-radius: 50%;
-            top: 5px;
-            left: 5px;
-            transition: all 0.1s;
-        }
-
-        .card h5 {
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-            color: var(--text);
-            font-family: 'Nosifier', cursive;
-        }
-
-        .card p {
-            font-size: 0.9rem;
-            color: var(--muted);
-            font-family: 'Griffy', cursive;
-        }
-
-        @keyframes glow {
-            from { opacity: 0.5; }
-            to { opacity: 1; }
-        }
-
-
-
-
-        input::file-selector-button {
-            background: var(--primary);
-            border: none;
-            color: #fff;
-            border-radius: 8px;
-            padding: 6px 12px;
-            margin-right: 10px;
-            transition: 0.2s;
-            font-family: 'Griffy', cursive;
-        }
-
-        input::file-selector-button:hover {
-            background: var(--accent);
-        }
-
-        .bat {
-            position: fixed;
-            width: 30px;
-            height: 30px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22,10V8C22,8 20,4 16,4C15,4 14,5 14,5C14,5 13,4 12,4C11,4 10,5 10,5C10,5 9,4 8,4C4,4 2,8 2,8V10C2,10 5,9 7,10C9,11 9,14 9,14C9,14 9,12 11,11C13,10 14,12 14,12C14,12 15,10 17,11C19,12 19,14 19,14C19,14 19,11 21,10C23,9 26,10 26,10H22Z" fill="%2394a3b8"/></svg>') no-repeat;
-            opacity: 0.7;
-            z-index: 1000;
-            animation: fly 15s infinite linear;
-        }
-
-        @keyframes fly {
-            0% { transform: translate(-100px, 0) rotate(0deg); }
-            25% { transform: translate(25vw, 10vh) rotate(5deg); }
-            50% { transform: translate(50vw, -10vh) rotate(-5deg); }
-            75% { transform: translate(75vw, 5vh) rotate(3deg); }
-            100% { transform: translate(calc(100vw + 100px), 0) rotate(0deg); }
-        }
-
-        footer {
-            text-align: center;
-            color: var(--muted);
-            margin-top: 60px;
-            font-size: 0.9rem;
-            position: relative;
-        }
-
-        .warning {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--danger);
+        .profile-placeholder i {
+            font-size: 2rem;
             color: white;
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-family: 'Creepster', cursive;
-            animation: pulse 2s infinite;
-            z-index: 1000;
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+        }
+
+        .user-info {
+            text-align: center;
+        }
+
+        .user-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+        }
+
+        .user-email {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+
+        .user-role {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .btn-custom {
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary-custom:hover {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-outline-custom {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .btn-outline-custom:hover {
+            /*background: var(--hover-bg);*/
+            color: var(--text-primary);
+            border-color: var(--primary);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .card {
+                margin-bottom: 20px;
+            }
         }
 
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.02); }
             100% { transform: scale(1); }
         }
 
-        .ghost {
-            position: fixed;
-            width: 60px;
-            height: 80px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A9,9 0 0,0 3,11C3,14.03 4.53,16.82 7,18.47V22H9V19.5C9.94,19.85 10.94,20 12,20C13.06,20 14.06,19.85 15,19.5V22H17V18.46C19.47,16.81 21,14 21,11A9,9 0 0,0 12,2M12,4A7,7 0 0,1 19,11C19,13.5 17.72,15.74 15.76,17.03L15,17.5V19H13V17.5L12.24,17.03C10.28,15.74 9,13.5 9,11A7,7 0 0,1 12,4M12,6A5,5 0 0,0 7,11C7,12.64 7.78,14.14 9,15.17V13.5L10.5,14.5L12,13.5L13.5,14.5L15,13.5V15.17C16.22,14.14 17,12.64 17,11A5,5 0 0,0 12,6Z" fill="%2394a3b8" opacity="0.7"/></svg>') no-repeat;
-            opacity: 0.3;
-            z-index: 999;
-            animation: float-ghost 10s infinite ease-in-out;
-        }
-
-        @keyframes float-ghost {
-            0%, 100% { transform: translateY(0) translateX(0); }
-            25% { transform: translateY(-20px) translateX(10px); }
-            50% { transform: translateY(10px) translateX(-10px); }
-            75% { transform: translateY(-10px) translateX(5px); }
+        .card:hover .profile-placeholder {
+            animation: pulse 0.6s ease-in-out;
         }
     </style>
 </head>
-
 <body>
-<div class="spiderweb top-left"></div>
-<div class="spiderweb top-right"></div>
-<div class="spiderweb bottom-left"></div>
-<div class="spiderweb bottom-right"></div>
-
-<div class="blood-stain random1"></div>
-<div class="blood-stain random2"></div>
-<div class="blood-stain random3"></div>
-
-<div class="bat" style="top: 10%;"></div>
-<div class="bat" style="top: 30%; animation-delay: 5s;"></div>
-<div class="bat" style="top: 50%; animation-delay: 10s;"></div>
-
-<div class="ghost" style="top: 20%; left: 10%;"></div>
-<div class="ghost" style="top: 40%; right: 15%; animation-delay: 3s;"></div>
-
-<div class="container">
-    <h2>🧑‍💼 Admin Panel — Foydalanuvchilar 👻</h2>
-
-    <!-- Foydalanuvchilar ro'yxati - RASMSIZ -->
-    <div class="row">
-        {{range .Admins}}
-        <div class="col-md-4 col-lg-3 mb-4">
-        <div class="card text-center p-4 h-100 user-card" data-id="{{.ID}}">
-            <div class="profile-placeholder">
-                <div class="horror-icon">
-                    <i class="fas fa-skull-crossbones"></i>
-                </div>
-                <div class="eyes">
-                    <div class="eye left"><div class="pupil"></div></div>
-                    <div class="eye right"><div class="pupil"></div></div>
-                </div>
-            </div>
-            <h5>{{.Email}}</h5>
-            <p>{{.Role}}</p>
-        </div>
-    </div>
-
-    {{end}}
-    </div>
-
-    <!-- Modal oynasi -->
-    <div class="modal fade" id="userModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content p-3">
-                <h4 id="userName"></h4>
-                <p><b>Email:</b> <span id="userEmail"></span></p>
-                <p><b>Username:</b> <span id="userUsername"></span></p>
-                <p><b>Ro‘yxatdan o‘tgan sana:</b> <span id="userCreated"></span></p>
-            </div>
-        </div>
-    </div>
-
-    <footer>
-        <p>© 2025 Admin Panel. Dizayn: <span style="color: var(--accent);">Dark Horror</span> 💀👻🦇</p>
-    </footer>
+<div class="header-section">
+    <h1 class="page-title">👤 Admin Panel — Foydalanuvchilar</h1>
+    <p class="subtitle">Sizning platformangizdagi barcha foydalanuvchilar ro'yxati</p>
 </div>
 
-<a href="#" class="warning">
-    ⚠️ XAVF: BU JOYDA QO'rqinchli NARSALAR BOR ⚠️
-</a>
+<div class="container main-container">
+    <div class="row">
+        {{range .Admins}}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 user-card" data-id="{{.ID}}">
+                    <div class="card-header">
+                        <h5 class="mb-0">Profil Ma'lumotlari</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="profile-placeholder">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name">{{.Name}}</div>
+                            <div class="user-email">{{.Email}}</div>
+                            <div class="user-role">{{.Role}}</div>
+                        </div>
 
-<script>
-    function showUserDetails(id) {
-        fetch(`/admin/user?id=${id}`)
-            .then(res => {
-                if (!res.ok) throw new Error('Ma’lumot topilmadi');
-                return res.json();
-            })
-            .then(data => {
-                document.getElementById('userName').textContent = data.name;
-                document.getElementById('userEmail').textContent = data.email;
-                document.getElementById('userUsername').textContent = data.username;
-                document.getElementById('userCreated').textContent = data.createdAt;
-                new bootstrap.Modal(document.getElementById('userModal')).show();
-            })
-            .catch(err => alert("❌ " + err.message));
-    }
-    document.querySelectorAll('.user-card').forEach(card => {
-        card.addEventListener('click', async () => {
-            const userId = card.getAttribute('data-id');
-            try {
-                const res = await fetch(`/admin/user?id=${userId}`);
-                if (!res.ok) throw new Error("Server javobi noto‘g‘ri");
-                const data = await res.json();
-                alert(`👤 Foydalanuvchi: ${data.name}\n📧 Email: ${data.email}\n🧩 Role: ${data.role}`);
-            } catch (err) {
-                console.error(err);
-                alert("❌ Xatolik yuz berdi");
-            }
-        });
-    });
-    document.addEventListener('mousemove', (e) => {
-        const eyes = document.querySelectorAll('.eye');
-        eyes.forEach(eye => {
-            const pupil = eye.querySelector('.pupil');
-            const eyeRect = eye.getBoundingClientRect();
-            const eyeCenterX = eyeRect.left + eyeRect.width / 2;
-            const eyeCenterY = eyeRect.top + eyeRect.height / 2;
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <div class="stat-value">{{.LoginCount}}</div>
+                                <div class="stat-label">Kirishlar</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">{{.LastLogin}}</div>
+                                <div class="stat-label">So'nggi kirish</div>
+                            </div>
+                        </div>
 
-            const angle = Math.atan2(e.clientY - eyeCenterY, e.clientX - eyeCenterX);
-            const distance = Math.min(5, Math.hypot(e.clientX - eyeCenterX, e.clientY - eyeCenterY) / 10);
+                        <div class="action-buttons">
+                            <button class="btn btn-custom btn-primary-custom" onclick="showUserDetails('{{.ID}}')">
+                                <i class="fas fa-eye me-2"></i>Tafsilotlar
+                            </button>
+                            <button class="btn btn-custom btn-outline-custom">
+                                <i class="fas fa-edit me-2"></i>O'zgartirish
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{end}}
+    </div>
+</div>
 
-            const pupilX = Math.cos(angle) * distance;
-            const pupilY = Math.sin(angle) * distance;
+<footer class="footer">
+    <p>&copy; 2025 Admin Panel. Dizayn: <a href="#">Modern Dark Theme</a> • Barcha huquqlar himoyalangan</p>
+</footer>
 
-            pupil.style.transform = `translate(${pupilX}px, ${pupilY}px)`;
-        });
-    });
+<!-- Modal -->
+<div class="modal fade" id="userModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title text-white">Foydalanuvchi Tafsilotlari</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-light">
+                <div class="row">
+                    <div class="col-md-4 text-center">
+                        <img src="https://picsum.photos/seed/{{.ID}}/150/150.jpg" alt="Profile" class="rounded-circle img-fluid mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                        <h5>{{.Name}}</h5>
+                        <p class="text-muted">{{.Role}}</p>
+                    </div>
+                    <div class="col-md-8">
+                        <table class="table table-dark table-hover">
+                            <tbody>
+                            <tr>
+                                <th scope="row">Email</th>
+                                <td>{{.Email}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Telefon</th>
+                                <td>+998{{.Phone}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Ro'yxatdan o'tgan sana</th>
+                                <td>{{.CreatedAt}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">So'nggi kirish</th>
+                                <td>{{.LastLogin}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Holati</th>
+                                <td>
+                                    <span class="badge bg-success">Faol</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-secondary">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Yopish</button>
+                <button type="button" class="btn btn-primary">O'zgartirish</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-    setInterval(() => {
-        const cards = document.querySelectorAll('.card');
-        const randomCard = cards[Math.floor(Math.random() * cards.length)];
-        randomCard.style.animation = 'flicker 0.5s';
-        setTimeout(() => {
-            randomCard.style.animation = '';
-        }, 500);
-    }, 5000);
-
-    setInterval(() => {
-        const warning = document.querySelector('.warning');
-        warning.style.animation = 'none';
-        setTimeout(() => {
-            warning.style.animation = 'pulse 2s infinite';
-        }, 10);
-    }, 10000);
-</script>
-
-<!-- ✅ Bootstrap JS shu yerda bo‘lishi kerak -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function showUserDetails(userId) {
+        const modal = new bootstrap.Modal(document.getElementById('userModal'));
+        modal.show();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.style.transitionDelay = `${Math.random() * 0.3}s`;
+        });
+    });
+</script>
 </body>
 </html>
