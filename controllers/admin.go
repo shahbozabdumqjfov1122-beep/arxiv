@@ -15,17 +15,20 @@ type AdminController struct {
 	beego.Controller
 }
 
+// GET /admin — adminlar ro‘yxati
 func (c *AdminController) Get() {
+
 	adminID := c.GetSession("admin_id")
 	if adminID == nil {
 		c.Redirect("/admin/login", 302)
 		return
 	}
-	// ... sessiya tekshiruvi
-	var users []models.User // models.Admin o'rniga User chaqiriladi
-	database.DB.Find(&users)
 
-	c.Data["Admins"] = users // Shablonni buzmaslik uchun nomni o'zgartirmadik
+	// Sessiya mavjud bo‘lsa, admin ro‘yxatini ko‘rsat
+	var admins []models.Admin
+	database.DB.Find(&admins)
+
+	c.Data["Admins"] = admins
 	c.TplName = "admin.html"
 }
 func (c *AdminController) LoginPost() {
