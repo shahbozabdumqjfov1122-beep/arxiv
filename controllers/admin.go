@@ -16,22 +16,16 @@ type AdminController struct {
 }
 
 func (c *AdminController) Get() {
-
 	adminID := c.GetSession("admin_id")
 	if adminID == nil {
 		c.Redirect("/admin/login", 302)
 		return
 	}
-
-	// ✅ Oʻzgartirilgan joy: Admin emas, User ma'lumotlarini olyapmiz!
-	var users []models.User // models.Admin o'rniga models.User ishlatildi
+	// ... sessiya tekshiruvi
+	var users []models.User // models.Admin o'rniga User chaqiriladi
 	database.DB.Find(&users)
 
-	// ✅ Oʻzgartirilgan joy: "Admins" o'rniga "Users" (yoki shabloningizni moslang)
-	c.Data["Admins"] = users // Agar shablon hali ham {{range .Admins}} ni ishlatsa, nomini o'zgartirmaymiz.
-	// Eslatma: Ushbu kodda "Admins" nomini ishlatish shabloningizni buzmaslik uchun shunday qoldirildi,
-	// lekin amalda "Users" deb nomlash to'g'riroq.
-
+	c.Data["Admins"] = users // Shablonni buzmaslik uchun nomni o'zgartirmadik
 	c.TplName = "admin.html"
 }
 func (c *AdminController) LoginPost() {

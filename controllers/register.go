@@ -70,14 +70,25 @@ func (c *RegisterController) Post() {
 		return
 	}
 
+	// RegisterController.Post() ichida
+	// ...
 	// 4️⃣ Foydalanuvchi allaqachon email bilan mavjudligini tekshirish
-	var existing models.User
-	result := database.DB.Where("email = ?", email).First(&existing)
-	if result.RowsAffected > 0 {
-		c.Data["Error"] = "⚠️ Bu email bilan foydalanuvchi allaqachon ro‘yxatdan o‘tgan!"
+	var existingUser models.User
+	resultUser := database.DB.Where("email = ?", email).First(&existingUser)
+	if resultUser.RowsAffected > 0 {
+		// ... xato
+		return
+	}
+
+	// ✅ QO'SHIMCHA: Agar Admin jadvalida allaqachon SuperAdmin sifatida bo'lsa...
+	var existingAdmin models.Admin
+	resultAdmin := database.DB.Where("email = ?", email).First(&existingAdmin)
+	if resultAdmin.RowsAffected > 0 {
+		c.Data["Error"] = "⚠️ Bu email allaqachon Admin sifatida ro‘yxatdan o‘tgan!"
 		c.TplName = "register.html"
 		return
 	}
+	// ...
 
 	// 5️⃣ Username yagona bo‘lishini ta’minlash
 	username := strings.ToLower(strings.TrimSpace(name))
