@@ -379,22 +379,23 @@
     <!-- Foydalanuvchilar ro'yxati - RASMSIZ -->
     <div class="row">
         {{range .Admins}}
-            <div class="col-md-4 col-lg-3 mb-4">
-                <div class="card text-center p-4 h-100 user-card" data-id="{{.ID}}" onclick="showUserDetails({{.ID}})">
-                    <div class="profile-placeholder">
-                        <div class="horror-icon">
-                            <i class="fas fa-skull-crossbones"></i>
-                        </div>
-                        <div class="eyes">
-                            <div class="eye left"><div class="pupil"></div></div>
-                            <div class="eye right"><div class="pupil"></div></div>
-                        </div>
-                    </div>
-                    <h5>{{.Email}}</h5>
-                    <p>{{.Role}}</p>
+        iv class="col-md-4 col-lg-3 mb-4">
+        <div class="card text-center p-4 h-100 user-card" data-id="{{.ID}}">
+            <div class="profile-placeholder">
+                <div class="horror-icon">
+                    <i class="fas fa-skull-crossbones"></i>
+                </div>
+                <div class="eyes">
+                    <div class="eye left"><div class="pupil"></div></div>
+                    <div class="eye right"><div class="pupil"></div></div>
                 </div>
             </div>
-        {{end}}
+            <h5>{{.Email}}</h5>
+            <p>{{.Role}}</p>
+        </div>
+    </div>
+
+    {{end}}
     </div>
 
     <!-- Modal oynasi -->
@@ -435,17 +436,17 @@
             .catch(err => alert("❌ " + err.message));
     }
     document.querySelectorAll('.user-card').forEach(card => {
-        card.addEventListener('click', () => {
+        card.addEventListener('click', async () => {
             const userId = card.getAttribute('data-id');
-            fetch(`/admin/user?id=${userId}`)
-                .then(res => res.json())
-                .then(data => {
-                    alert(`Foydalanuvchi: ${data.name}\nEmail: ${data.email}\nRole: ${data.role}`);
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert('Xatolik yuz berdi');
-                });
+            try {
+                const res = await fetch(`/admin/user?id=${userId}`);
+                if (!res.ok) throw new Error("Server javobi noto‘g‘ri");
+                const data = await res.json();
+                alert(`👤 Foydalanuvchi: ${data.name}\n📧 Email: ${data.email}\n🧩 Role: ${data.role}`);
+            } catch (err) {
+                console.error(err);
+                alert("❌ Xatolik yuz berdi");
+            }
         });
     });
     document.addEventListener('mousemove', (e) => {
