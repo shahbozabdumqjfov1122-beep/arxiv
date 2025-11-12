@@ -15,7 +15,6 @@ type AdminController struct {
 	beego.Controller
 }
 
-// GET /admin — adminlar ro‘yxati
 func (c *AdminController) Get() {
 
 	adminID := c.GetSession("admin_id")
@@ -24,11 +23,15 @@ func (c *AdminController) Get() {
 		return
 	}
 
-	// Sessiya mavjud bo‘lsa, admin ro‘yxatini ko‘rsat
-	var admins []models.Admin
-	database.DB.Find(&admins)
+	// ✅ Oʻzgartirilgan joy: Admin emas, User ma'lumotlarini olyapmiz!
+	var users []models.User // models.Admin o'rniga models.User ishlatildi
+	database.DB.Find(&users)
 
-	c.Data["Admins"] = admins
+	// ✅ Oʻzgartirilgan joy: "Admins" o'rniga "Users" (yoki shabloningizni moslang)
+	c.Data["Admins"] = users // Agar shablon hali ham {{range .Admins}} ni ishlatsa, nomini o'zgartirmaymiz.
+	// Eslatma: Ushbu kodda "Admins" nomini ishlatish shabloningizni buzmaslik uchun shunday qoldirildi,
+	// lekin amalda "Users" deb nomlash to'g'riroq.
+
 	c.TplName = "admin.html"
 }
 func (c *AdminController) LoginPost() {
